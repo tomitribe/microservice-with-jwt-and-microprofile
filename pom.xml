@@ -65,7 +65,7 @@
         <artifactId>tomee-maven-plugin</artifactId>
         <version>${tomee.version}</version>
         <configuration>
-          <tomeeClassifier>microprofile</tomeeClassifier>
+          <!--<tomeeClassifier>microprofile</tomeeClassifier>-->
           <args>-Xmx512m -XX:PermSize=256m</args>
           <config>${project.basedir}/src/main/tomee/</config>
         </configuration>
@@ -256,9 +256,7 @@
           <artifactId>apache-tomee</artifactId>
           <version>${tomee.version}</version>
           <type>zip</type>
-          <!--
-          <classifier>microprofile</classifier>
-          -->
+          <!--<classifier>microprofile</classifier>-->
           <scope>test</scope>
         </dependency>
       </dependencies>
