@@ -17,16 +17,16 @@
  "use strict";
  */
 
-define(['lib/underscore', 'lib/handlebars'], function (underscore) {
+define(['lib/underscore', 'lib/handlebars'], function (_, Handlebars) {
     'use strict';
 
-    var value = underscore.uniqueId('moviefun_');
+    var value = _.uniqueId('moviefun_');
 
     var current = function () {
         return value;
     };
     var next = function () {
-        value = underscore.uniqueId('moviefun_');
+        value = _.uniqueId('moviefun_');
         return value;
     };
     Handlebars.registerHelper('id_current', function (key) {

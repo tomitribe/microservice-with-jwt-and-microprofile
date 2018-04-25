@@ -20,13 +20,15 @@
     'use strict';
 
     var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/id'];
-    define(deps, function (templates, underscore) {
-
+    define(deps, function (templates, _, Backbone) {
         var View = Backbone.View.extend({
+            initialize: function(options){
+                this.options = options || {};
+            },
             tagName: 'div',
-            className: 'modal ux-movie-window',
+            className: 'modal',
             events: {
-                'click .ux-application': function (evt) {
+                'click .ux-main': function (evt) {
                     evt.preventDefault();
                     var me = this;
                     me.trigger('show-application', {});
