@@ -51,7 +51,7 @@
                     pageLoading(pageNumber, fieldName, fieldValue);
                 }
             ).catch( function () {
-                    router.navigate('/login', {
+                    router.navigate('login', {
                         trigger: true
                     });
                 }
@@ -108,7 +108,7 @@
                 showMain: function (page, fieldName, fieldValue) {
                     var me = this;
                     appState.page = page;
-                    appState.fieldName = fieldName;
+                    appState.fieldName =  fieldName;
                     appState.fieldValue = fieldValue;
                     containerView.showView(mainView);
                     if (!page || !underscore.isNumber(Number(page))) {

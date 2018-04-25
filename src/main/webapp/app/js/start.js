@@ -18,12 +18,12 @@
 
 require.config(APP_CONFIG);
 
-requirejs(['app/js/application'], function (app) {
+requirejs(['app/js/app'], function (app) {
     'use strict';
 
     $(window.document).ready(function () {
         // all the action is in app
-        app.start();
+        window.BackboneApp = app.start();
     });
 });
 

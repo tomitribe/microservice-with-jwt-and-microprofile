@@ -19,23 +19,42 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates) {
+    var deps = ['app/js/templates', 'app/js/model/auth', 'app/js/i18n', 'lib/backbone'];
+    define(deps, function (templates, auth, il8n, Backbone) {
 
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
             },
             el: 'body',
+            events: {
+                'click .ux-logout': function (evt) {
+                    evt.preventDefault();
+                    var me = this,
+                        router = window.BackboneApp.getRouter();
+                    auth.logout()
+                        .then(
+                            function () {
+                                router.navigate('login', {
+                                    trigger: true
+                                });
+                            }
+                        )
+                }
+            },
             showView: function (view) {
                 var me = this;
-                var contentarea = me.$('.ux-contentarea');
+                var contentArea = me.$('.ux-content-area');
                 if (me.currentView) {
                     me.currentView.$el.detach();
                 }
                 me.currentView = view;
                 me.currentView.render();
-                contentarea.append(me.currentView.el);
+                contentArea.append(me.currentView.el);
+
+                var access = auth.get('auth');
+                me.$('.ux-logout').toggle('d-none', access);
+
                 if (view.renderCallback) {
                     view.renderCallback();
                 }
@@ -44,12 +63,12 @@
                 myMenuItem.addClass('active');
             },
 
-            render: function () {
-                if (this.options.isRendered) {
+            render: function (reRender) {
+                if (!reRender && this.options.isRendered) {
                     return this;
                 }
                 var html = templates.getValue('container', {
-                    userName: ''
+                    userName: auth.get('username')
                 });
                 this.$el.html(html);
 
