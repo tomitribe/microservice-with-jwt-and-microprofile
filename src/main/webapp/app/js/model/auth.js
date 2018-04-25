@@ -31,27 +31,27 @@
             },
             initialize: function () {
                 var me = this;
-                var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
-                $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-                    if(typeof access_token !== 'undefined' && !!access_token) {
-                        jqXHR.setRequestHeader('Authorization', token_type + access_token);
+                $.ajaxSetup({
+                    beforeSend: function ( jqXHR ) {
+                        var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                        if (typeof access_token !== 'undefined' && !!access_token) {
+                            jqXHR.setRequestHeader('Authorization', token_type + access_token);
+                        }
                     }
                 });
             },
             login: function(creds) {
                 var me = this;
                 return new Promise( function (res, rej) {
-                    console.log(creds);
                     $.post( me.urlRoot, creds )
                         .done(
-                            function (result) {
-                                var resp = result.json();
-                                if (!resp || !resp['access_token']) rej(model, resp);
+                            function (resp) {
+                                if (!resp || !resp['access_token']) rej(resp);
                                 me.set({
                                     auth: true,
-                                    username: "creds['username']",
-                                    access_token: "resp['access_token']",
-                                    token_type: "resp['token_type']"
+                                    username: creds['username'],
+                                    access_token: resp['access_token'],
+                                    token_type: resp['token_type']
                                 });
                                 res(me.get('auth'));
                             })
