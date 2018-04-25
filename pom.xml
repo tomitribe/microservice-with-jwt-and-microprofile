@@ -68,6 +68,15 @@
           <tomeeClassifier>microprofile</tomeeClassifier>
           <args>-Xmx512m -XX:PermSize=256m</args>
           <config>${project.basedir}/src/main/tomee/</config>
+          <synchronization>
+            <updateOnlyExtensions>
+              <updateOnlyExtension>.html</updateOnlyExtension>
+              <updateOnlyExtension>.handlebars</updateOnlyExtension>
+              <updateOnlyExtension>.js</updateOnlyExtension>
+              <updateOnlyExtension>.less</updateOnlyExtension>
+              <updateOnlyExtension>.jcss</updateOnlyExtension>
+            </updateOnlyExtensions>
+          </synchronization>
         </configuration>
       </plugin>
     </plugins>
