@@ -22,36 +22,72 @@
     var deps = ['lib/underscore', 'lib/backbone'];
     define(deps, function (_, Backbone) {
         var SessionModel = Backbone.Model.extend({
-            urlRoot: '/session',
+            urlRoot: window.ux.ROOT_URL + 'rest/token',
+            defaults: {
+                auth: false,
+                username: '',
+                access_token: '',
+                token_type: ''
+            },
             initialize: function () {
-                var that = this;
+                var me = this;
                 $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-                    if(typeof that.get('_auToken') !== 'undefined') {
-                        jqXHR.setRequestHeader('Authorization', that.get('_auToken'));
+                    var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                    if(typeof access_token !== 'undefined' && !!access_token) {
+                        jqXHR.setRequestHeader('Authorization', token_type + access_token);
                     }
                 });
             },
             login: function(creds) {
-                this.save(creds, {
-                    success: function () {}
+                var me = this;
+                return new Promise( function (res, rej) {
+                    me.save(creds, {
+                        success: function (model, resp) {
+                            if (!resp || !resp['access_token']) rej(model, resp);
+
+                            me.set({
+                                auth: true,
+                                username: creds['username'],
+                                access_token: resp['access_token'],
+                                token_type: resp['token_type']
+                            });
+                            res(me.get('auth'));
+                        },
+                        error: rej
+                    });
                 });
             },
             logout: function() {
-                var that = this;
-                this.destroy({
-                    success: function (model, resp) {
-                        model.clear();
-                        model.id = null;
-                        that.set({auth: false, _auToken: resp._auToken});
-                    }
+                var me = this;
+                return new Promise( function (res, rej) {
+                    me.clear();
+                    me.destroy({
+                        success: function (model, resp) {
+                            me.id = null;
+                            me.set({
+                                auth: false,
+                                username: '',
+                                access_token: '',
+                                token_type: ''
+                            });
+                            res(!me.get('auth'));
+                        },
+                        error: rej
+                    });
                 });
             },
             getAuth: function() {
+                var me = this;
                 return new Promise(function(res, rej) {
                     /*this.fetch({
-                        success: res,
-                        failure: rej
-                    })*/
+                        success: function(model, resp) {
+                            res(me.get('auth'));
+                        },
+                        error: function() {
+                            me.logout();
+                            rej();
+                        }
+                    });*/
                     // TODO: finish AUTH from token;
                     res();
                 })

@@ -33,9 +33,22 @@
             events: {
                 'submit .form-login': function (evt) {
                     evt.preventDefault();
-                    var me = this;
-                    console.log($(evt.target).serializeArray());
-                    //auth.login()
+                    var me = this,
+                        creds = $(evt.target).serializeArray().reduce(function(obj, item) { obj[item.name] = item.value; return obj; }, {}),
+                        router = window.BackboneApp.getRouter();
+                    auth.login(creds).then(
+                        function () {
+                            router.navigate('main/1', {
+                                trigger: true
+                            });
+                        }
+                    ).catch(
+                        function (e) {
+                            router.navigate('main/1', {
+                                trigger: true
+                            });
+                        }
+                    );
                 }
             },
             render: function () {
