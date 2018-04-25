@@ -43,19 +43,12 @@
                 'click .ux-filter-action': function (evt) {
                     evt.preventDefault();
                     var me = this;
-                    var filterValue = $(me.$el.find('.ux-filter-field').get(0)).val();
-                    filterValue = $.trim(filterValue);
-                    if (filterValue !== '') {
-                        me.trigger('filter', {
-                            filterType: me.filterOption,
-                            filterValue: filterValue
-                        });
-                    }
+                    me.filterAction($(me.$el.find('.ux-filter-field').get(0)).val());
                 },
                 'click .ux-clear-filter-action': function (evt) {
                     evt.preventDefault();
                     var me = this;
-                    me.trigger('clear-filter', {});
+                    me.filterAction();
                 },
                 'click .ux-main': function (evt) {
                     evt.preventDefault();
@@ -70,7 +63,27 @@
                     me.trigger('add', {});
                 },
                 'keydown .ux-filter-field': function (evt) {
-                    console.log(evt);
+                    var me = this;
+                    if (!!evt.target.value && evt.keyCode === 13) {
+                        evt.preventDefault();
+                        me.filterAction(evt.target.value);
+                    }
+                    if (!evt.target.value && evt.keyCode === 8) {
+                        evt.preventDefault();
+                        me.filterAction();
+                    }
+                }
+            },
+
+            filterAction: function(filterValue) {
+                var me = this, val = !!filterValue && filterValue.trim();
+                if(!!val) {
+                    me.trigger('filter', {
+                        filterType: me.filterOption,
+                        filterValue: val
+                    });
+                } else {
+                    me.trigger('clear-filter', {})
                 }
             },
 
