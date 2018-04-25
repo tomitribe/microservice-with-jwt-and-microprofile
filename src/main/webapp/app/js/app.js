@@ -33,6 +33,8 @@
         'lib/less', 'lib/backbone', 'lib/jquery', 'lib/bootstrap'
     ];
     define(deps, function (containerView, loginView, mainView, paginator, MovieView, underscore, moviesList, MovieModel, AuthModel, i18n) {
+        var auth = new AuthModel();
+        window.auth = auth;
         var max = 5;
         var appState = {
             page: null,
@@ -46,7 +48,7 @@
 
         function loadPage(pageNumber, fieldName, fieldValue) {
 
-            AuthModel.getAuth().then(
+            auth.getAuth().then(
                 function () {
                     pageLoading(pageNumber, fieldName, fieldValue);
                 }
@@ -128,6 +130,7 @@
                     }
                 }
             });
+
             router = new Router();
 
             mainView.on('load-sample', function () {
@@ -209,7 +212,8 @@
         }
 
         return {
-            start: start
+            start: start,
+            auth: auth
         };
     });
 }());
