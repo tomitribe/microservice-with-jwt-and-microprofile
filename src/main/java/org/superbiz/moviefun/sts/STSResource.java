@@ -103,6 +103,8 @@ public class STSResource {
                     .claim("groups", scopes)
                     .claim("username", username)
                     .claim("email", username + "@superbiz.org")
+                    .subject(username)
+                    .audience("mp-jwt-moviefun")
                     .issuer(MoviesMPJWTConfigurationProvider.ISSUED_BY)
                     .build();
 
