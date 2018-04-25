@@ -174,42 +174,52 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>backbonejs</artifactId>
-      <version>1.0.0</version>
+      <version>1.3.3</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>3.1.0</version>
+      <version>4.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>handlebars</artifactId>
-      <version>1.2.1</version>
+      <version>4.0.6</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>jquery</artifactId>
-      <version>2.1.0-1</version>
+      <version>3.3.1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>json2</artifactId>
-      <version>20110223</version>
+      <version>20140204</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>less</artifactId>
-      <version>1.6.0-1</version>
+      <version>2.7.2</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>requirejs</artifactId>
-      <version>2.1.10</version>
+      <version>2.3.5</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>requirejs-text</artifactId>
-      <version>2.0.10</version>
+      <version>2.0.15</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>underscorejs</artifactId>
+      <version>1.8.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>font-awesome</artifactId>
+      <version>5.0.10</version>
     </dependency>
   </dependencies>
 

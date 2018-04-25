@@ -23,11 +23,13 @@
     define(deps, function (templates) {
 
         var View = Backbone.View.extend({
+            initialize: function(options){
+                this.options = options || {};
+            },
             tagName: 'ul',
             className: 'pagination',
-
             count: 0,
-
+            page: 1,
             events: {
                 'click a': function (evt) {
                     evt.preventDefault();
@@ -43,22 +45,29 @@
             render: function () {
                 var me = this;
                 me.$el.empty();
-                me.$el.append(templates.getValue('application-table-paginator-button', {
+                me.$el.append(templates.getValue('main-table-paginator-button', {
                     pageNumber: '1',
                     pageText: '<<'
                 }));
                 var i;
                 for (i = 1; i < me.count + 1; i += 1) {
-                    me.$el.append(templates.getValue('application-table-paginator-button', {
+                    me.$el.append(templates.getValue('main-table-paginator-button', {
+                        isActive: i === this.page,
                         pageNumber: i,
                         pageText: i
                     }));
                 }
-                me.$el.append(templates.getValue('application-table-paginator-button', {
+                me.$el.append(templates.getValue('main-table-paginator-button', {
                     pageNumber: 'last',
                     pageText: '>>'
                 }));
                 return this;
+            },
+
+            setPage: function (page) {
+                var me = this;
+                me.page = page || 1;
+                me.render();
             },
 
             setCount: function (count) {

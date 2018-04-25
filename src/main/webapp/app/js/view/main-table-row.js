@@ -20,9 +20,12 @@
     'use strict';
 
     var deps = ['app/js/templates', 'lib/backbone'];
-    define(deps, function (templates) {
+    define(deps, function (templates, Backbone) {
 
         var View = Backbone.View.extend({
+            initialize: function(options){
+                this.options = options || {};
+            },
             tagName: 'tr',
             events: {
                 'click .ux-delete-row': function (evt) {
@@ -46,7 +49,7 @@
                 var me = this;
                 if (!this.options.isRendered) {
                     me.$el.empty();
-                    me.$el.append(templates.getValue('application-table-row', {
+                    me.$el.append(templates.getValue('main-table-row', {
                         title: me.model.get('title'),
                         director: me.model.get('director'),
                         genre: me.model.get('genre'),

@@ -21,16 +21,18 @@
 
     var deps = [
         'app/js/view/container',
-        'app/js/view/application',
-        'app/js/view/application-table-paginator',
+        'app/js/view/login',
+        'app/js/view/main',
+        'app/js/view/main-table-paginator',
         'app/js/view/movie',
         'lib/underscore',
         'app/js/model/movies',
         'app/js/model/movie',
+        'app/js/model/auth',
         'app/js/i18n',
         'lib/less', 'lib/backbone', 'lib/jquery', 'lib/bootstrap'
     ];
-    define(deps, function (containerView, applicationView, paginator, MovieView, underscore, moviesList, MovieModel) {
+    define(deps, function (containerView, loginView, mainView, paginator, MovieView, underscore, moviesList, MovieModel, AuthModel, i18n) {
         var max = 5;
         var appState = {
             page: null,
@@ -38,10 +40,26 @@
             fieldValue: null
         };
         containerView.render();
+        var router = null;
 
         $.ajaxSetup({ cache: false });
 
         function loadPage(pageNumber, fieldName, fieldValue) {
+
+            AuthModel.getAuth().then(
+                function () {
+                    pageLoading(pageNumber, fieldName, fieldValue);
+                }
+            ).catch( function () {
+                    router.navigate('/login', {
+                        trigger: true
+                    });
+                }
+            )
+        }
+
+        function pageLoading(pageNumber, fieldName, fieldValue) {
+
             var data = {
                 max: max,
                 first: ((pageNumber - 1) * max)
@@ -50,11 +68,11 @@
                 data.field = fieldName;
                 data.searchTerm = fieldValue;
             }
-            applicationView.setFilter(fieldName, fieldValue);
+            mainView.setFilter(fieldName, fieldValue);
             moviesList.fetch({
                 data: data,
                 success: function (result) {
-                    applicationView.addRows(result.models);
+                    mainView.addRows(result.models);
 
                     $.ajax({
                         url: window.ux.ROOT_URL + 'rest/movies/count/',
@@ -67,7 +85,7 @@
                         success: function (total) {
                             var count = Math.ceil(total / max);
                             paginator.setCount(count);
-                            applicationView.setPaginator(count);
+                            mainView.setPaginator(count);
                         }
                     });
                 }
@@ -78,52 +96,56 @@
             //Starting the backbone router.
             var Router = Backbone.Router.extend({
                 routes: {
-                    '': 'showApplication',
-                    'application': 'showApplication',
-                    'application/:page': 'showApplication',
-                    'application/:page/:field/:value': 'showApplication'
+                    '': 'showMain',
+                    'main': 'showMain',
+                    'main/:page': 'showMain',
+                    'main/:page/:field/:value': 'showMain',
+                    'login': 'showLogin'
                 },
-
-                showApplication: function (page, fieldName, fieldValue) {
+                showLogin: function () {
+                    containerView.showView(loginView);
+                },
+                showMain: function (page, fieldName, fieldValue) {
                     var me = this;
                     appState.page = page;
                     appState.fieldName = fieldName;
                     appState.fieldValue = fieldValue;
-                    containerView.showView(applicationView);
+                    containerView.showView(mainView);
                     if (!page || !underscore.isNumber(Number(page))) {
-                        me.showApplication(1);
+                        me.showMain(1);
                     } else {
                         loadPage(Number(page), fieldName, fieldValue);
+                        paginator.setPage(Number(page));
                         if (fieldName) {
-                            me.navigate('application/' + page + '/' + fieldName + '/' + fieldValue, {
+                            me.navigate('main/' + page + '/' + fieldName + '/' + fieldValue, {
                                 trigger: false
                             });
                         } else {
-                            me.navigate('application/' + page, {
+                            me.navigate('main/' + page, {
                                 trigger: false
                             });
                         }
                     }
                 }
             });
-            var router = new Router();
+            router = new Router();
 
-            applicationView.on('load-sample', function () {
+            mainView.on('load-sample', function () {
                 $.ajax({
                     url: window.ux.ROOT_URL + 'rest/load/',
                     method: 'POST',
                     dataType: 'json',
                     data: {},
                     success: function (data) {
-                        router.showApplication();
+                        router.showMain();
                     }
                 });
             });
 
-            applicationView.on('delete', function (data) {
+            mainView.on('delete', function (data) {
                 data.model.destroy({
                     success: function () {
-                        router.showApplication(appState.page, appState.fieldName, appState.fieldValue);
+                        router.showMain(appState.page, appState.fieldName, appState.fieldValue);
                     }
                 });
             });
@@ -145,22 +167,22 @@
                 view.$el.modal({});
             }
 
-            applicationView.on('add', function () {
+            mainView.on('add', function () {
                 showMovieWindow(new MovieModel({}));
             });
 
-            applicationView.on('edit', function (data) {
+            mainView.on('edit', function (data) {
                 showMovieWindow(data.model);
             });
 
-            applicationView.on('filter', function (data) {
-                router.navigate('application/1/' + data.filterType + '/' + data.filterValue, {
+            mainView.on('filter', function (data) {
+                router.navigate('main/1/' + data.filterType + '/' + data.filterValue, {
                     trigger: true
                 });
             });
 
-            applicationView.on('clear-filter', function (data) {
-                router.navigate('application/1', {
+            mainView.on('clear-filter', function (data) {
+                router.navigate('main/1', {
                     trigger: true
                 });
             });
@@ -170,7 +192,7 @@
                 if (page === 'last') {
                     page = paginator.getCount();
                 }
-                router.showApplication(page, appState.fieldName, appState.fieldValue);
+                router.showMain(page, appState.fieldName, appState.fieldValue);
             });
 
             //Starting the backbone history.
