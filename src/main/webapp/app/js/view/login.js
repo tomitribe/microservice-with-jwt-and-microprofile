@@ -19,10 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/model/auth',
-        'lib/underscore', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates, auth, underscore, i18n, Backbone) {
-
+    var deps = ['app/js/templates', 'lib/underscore', 'app/js/i18n', 'lib/backbone'];
+    define(deps, function (templates, underscore, i18n, Backbone) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -34,9 +32,9 @@
                 'submit .form-login': function (evt) {
                     evt.preventDefault();
                     var me = this,
-                        creds = $(evt.target).serializeArray().reduce(function(obj, item) { obj[item.name] = item.value; return obj; }, {}),
+                        creds = $(evt.target).serialize(),
                         router = window.BackboneApp.getRouter();
-                    auth.login(creds).then(
+                    window.auth.login(creds).then(
                         function () {
                             router.navigate('main/1', {
                                 trigger: true
@@ -44,7 +42,7 @@
                         }
                     ).catch(
                         function (e) {
-                            router.navigate('main/1', {
+                            router.navigate('/login', {
                                 trigger: true
                             });
                         }

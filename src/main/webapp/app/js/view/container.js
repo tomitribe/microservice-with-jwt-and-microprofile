@@ -19,9 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/model/auth', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates, auth, il8n, Backbone) {
-
+    var deps = ['app/js/templates', 'app/js/i18n', 'lib/backbone'];
+    define(deps, function (templates, il8n, Backbone) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -32,7 +31,7 @@
                     evt.preventDefault();
                     var me = this,
                         router = window.BackboneApp.getRouter();
-                    auth.logout()
+                    window.auth.logout()
                         .then(
                             function () {
                                 router.navigate('login', {
@@ -52,8 +51,15 @@
                 me.currentView.render();
                 contentArea.append(me.currentView.el);
 
-                var access = auth.get('auth');
-                me.$('.ux-logout').toggle('d-none', access);
+                var access = window.auth.getAuth().then(
+                    function (value) {
+                        me.$('.ux-logout').show("fast");
+                    }
+                ).catch(
+                    function () {
+                        me.$('.ux-logout').hide("fast");
+                    }
+                );
 
                 if (view.renderCallback) {
                     view.renderCallback();
@@ -68,7 +74,7 @@
                     return this;
                 }
                 var html = templates.getValue('container', {
-                    userName: auth.get('username')
+                    userName: window.auth.get('username')
                 });
                 this.$el.html(html);
 

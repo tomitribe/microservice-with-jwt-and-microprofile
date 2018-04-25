@@ -21,7 +21,7 @@
 
     var deps = ['lib/underscore', 'lib/backbone'];
     define(deps, function (_, Backbone) {
-        var SessionModel = Backbone.Model.extend({
+        var AuthModel = Backbone.Model.extend({
             urlRoot: window.ux.ROOT_URL + 'rest/token',
             defaults: {
                 auth: false,
@@ -31,8 +31,8 @@
             },
             initialize: function () {
                 var me = this;
+                var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                 $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-                    var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                     if(typeof access_token !== 'undefined' && !!access_token) {
                         jqXHR.setRequestHeader('Authorization', token_type + access_token);
                     }
@@ -41,39 +41,35 @@
             login: function(creds) {
                 var me = this;
                 return new Promise( function (res, rej) {
-                    me.save(creds, {
-                        success: function (model, resp) {
-                            if (!resp || !resp['access_token']) rej(model, resp);
-
-                            me.set({
-                                auth: true,
-                                username: creds['username'],
-                                access_token: resp['access_token'],
-                                token_type: resp['token_type']
-                            });
-                            res(me.get('auth'));
-                        },
-                        error: rej
-                    });
+                    console.log(creds);
+                    $.post( me.urlRoot, creds )
+                        .done(
+                            function (result) {
+                                var resp = result.json();
+                                if (!resp || !resp['access_token']) rej(model, resp);
+                                me.set({
+                                    auth: true,
+                                    username: "creds['username']",
+                                    access_token: "resp['access_token']",
+                                    token_type: "resp['token_type']"
+                                });
+                                res(me.get('auth'));
+                            })
+                        .fail(rej);
                 });
             },
             logout: function() {
                 var me = this;
                 return new Promise( function (res, rej) {
                     me.clear();
-                    me.destroy({
-                        success: function (model, resp) {
-                            me.id = null;
-                            me.set({
-                                auth: false,
-                                username: '',
-                                access_token: '',
-                                token_type: ''
-                            });
-                            res(!me.get('auth'));
-                        },
-                        error: rej
+                    me.id = null;
+                    me.set({
+                        auth: false,
+                        username: '',
+                        access_token: '',
+                        token_type: ''
                     });
+                    res(!me.get('auth'));
                 });
             },
             getAuth: function() {
@@ -81,7 +77,7 @@
                 return new Promise(function(res, rej) {
                     /*this.fetch({
                         success: function(model, resp) {
-                            res(me.get('auth'));
+                            res();
                         },
                         error: function() {
                             me.logout();
@@ -89,11 +85,11 @@
                         }
                     });*/
                     // TODO: finish AUTH from token;
-                    res();
+                    me.get('auth') ? res() : rej();
                 })
             }
         });
-        return new SessionModel();
+        return AuthModel;
 
     });
 }());

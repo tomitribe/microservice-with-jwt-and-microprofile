@@ -24,6 +24,7 @@ requirejs(['app/js/app'], function (app) {
     $(window.document).ready(function () {
         // all the action is in app
         window.BackboneApp = app.start();
+        window.auth = app.auth;
     });
 });
 
