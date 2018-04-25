@@ -47,8 +47,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import static net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
-
 /**
  * Utilities for generating a JWT for testing
  */
@@ -81,6 +79,12 @@ public class TokenUtil {
         return generateTokenString(jsonResName, invalidClaims, null);
     }
 
+
+    public static JSONObject of(final String content) throws Exception {
+        final JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
+        return (JSONObject) parser.parse(content);
+    }
+
     /**
      * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
      * test resource key, possibly with invalid fields.
@@ -95,7 +99,7 @@ public class TokenUtil {
         if (invalidClaims == null) {
             invalidClaims = Collections.emptySet();
         }
-        InputStream contentIS = TokenUtil.class.getResourceAsStream(jsonResName);
+        final InputStream contentIS = TokenUtil.class.getResourceAsStream(jsonResName);
         byte[] tmp = new byte[4096];
         int length = contentIS.read(tmp);
         byte[] content = new byte[length];
@@ -126,14 +130,17 @@ public class TokenUtil {
         if (invalidClaims.contains(InvalidClaims.ISSUER)) {
             jwtContent.put(Claims.iss.name(), "INVALID_ISSUER");
         }
+
         long currentTimeInSecs = currentTimeInSecs();
         long exp = currentTimeInSecs + 300;
+
         // Check for an input exp to override the default of now + 300 seconds
         if (timeClaims != null && timeClaims.containsKey(Claims.exp.name())) {
             exp = timeClaims.get(Claims.exp.name());
         }
         jwtContent.put(Claims.iat.name(), currentTimeInSecs);
         jwtContent.put(Claims.auth_time.name(), currentTimeInSecs);
+
         // If the exp claim is not updated, it will be an old value that should be seen as expired
         if (!invalidClaims.contains(InvalidClaims.EXP)) {
             jwtContent.put(Claims.exp.name(), exp);
@@ -149,26 +156,31 @@ public class TokenUtil {
             // Generate a new random private key to sign with to test invalid signatures
             KeyPair keyPair = generateKeyPair(2048);
             pk = keyPair.getPrivate();
+
         } else {
+
             // Use the test private key associated with the test public key for a valid signature
             pk = readPrivateKey("/privateKey.pem");
         }
 
         // Create RSA-signer with the private key
         JWSSigner signer = new RSASSASigner(pk);
-        JWTClaimsSet claimsSet = JWTClaimsSet.parse(jwtContent);
+        final JWTClaimsSet claimsSet = JWTClaimsSet.parse(jwtContent);
         JWSAlgorithm alg = JWSAlgorithm.RS256;
+
         if (invalidClaims.contains(InvalidClaims.ALG)) {
             alg = JWSAlgorithm.HS256;
-            SecureRandom random = new SecureRandom();
-            BigInteger secret = BigInteger.probablePrime(256, random);
+            final SecureRandom random = new SecureRandom();
+            final BigInteger secret = BigInteger.probablePrime(256, random);
             signer = new MACSigner(secret.toByteArray());
         }
-        JWSHeader jwtHeader = new JWSHeader.Builder(alg)
+
+        final JWSHeader jwtHeader = new JWSHeader.Builder(alg)
                 .keyID("/privateKey.pem")
                 .type(JOSEObjectType.JWT)
                 .build();
-        SignedJWT signedJWT = new SignedJWT(jwtHeader, claimsSet);
+
+        final SignedJWT signedJWT = new SignedJWT(jwtHeader, claimsSet);
         signedJWT.sign(signer);
         return signedJWT.serialize();
     }

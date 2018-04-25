@@ -29,7 +29,6 @@ import java.util.UUID;
  * section</a> of the spec for more info.
  */
 
-@XmlRootElement
 public class TokenResponse implements Serializable {
     @JohnzonProperty("access_token")
     private final String accessToken;

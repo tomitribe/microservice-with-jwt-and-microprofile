@@ -31,12 +31,14 @@ import java.util.Optional;
 @Dependent
 public class MoviesMPJWTConfigurationProvider {
 
+    public static final String ISSUED_BY = "https://server.example.com";
+
     @Produces
     Optional<JWTAuthContextInfo> getOptionalContextInfo() throws NoSuchAlgorithmException, InvalidKeySpecException {
         JWTAuthContextInfo contextInfo = new JWTAuthContextInfo();
 
         // todo use MP Config to load the configuration
-        contextInfo.setIssuedBy("https://server.example.com");
+        contextInfo.setIssuedBy(ISSUED_BY);
 
         final String pemEncoded = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEq" +
                 "Fyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwR" +

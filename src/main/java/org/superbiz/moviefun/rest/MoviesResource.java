@@ -22,6 +22,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -77,6 +78,7 @@ public class MoviesResource {
 
     @POST
     @Consumes("application/json")
+    @RolesAllowed("create")
     public Movie addMovie(Movie movie) {
         service.addMovie(movie);
         return movie;
@@ -85,6 +87,7 @@ public class MoviesResource {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
+    @RolesAllowed("update")
     public Movie editMovie(
             @PathParam("id") final long id,
             Movie movie
@@ -95,7 +98,7 @@ public class MoviesResource {
 
     @DELETE
     @Path("{id}")
-//    @RolesAllowed("delete")
+    @RolesAllowed("delete")
     public void deleteMovie(@PathParam("id") long id) {
         service.deleteMovie(id);
     }
