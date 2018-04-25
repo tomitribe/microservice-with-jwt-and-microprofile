@@ -75,7 +75,8 @@ public class STSResource {
         }
 
         final List<String> scopes = new ArrayList<>();
-        final long expires = TimeUnit.MINUTES.toMillis(30);
+        final long expiresIn = TimeUnit.SECONDS.toMillis(300);
+        final long expires = System.currentTimeMillis() + expiresIn;
 
         // validate grants (especially the supported grants)
         if ("password".equalsIgnoreCase(grantType)) {
@@ -100,12 +101,16 @@ public class STSResource {
             final JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .jwtID(UUID.randomUUID().toString())
                     .claim("groups", scopes)
+                    .claim("username", username)
+                    .claim("email", username + "@superbiz.org")
                     .issuer(MoviesMPJWTConfigurationProvider.ISSUED_BY)
                     .build();
 
             final String accessToken;
             try {
-                accessToken = TokenUtil.generateTokenString(claimsSet.toJSONObject(), null, new HashMap<String, Long>());
+                accessToken = TokenUtil.generateTokenString(claimsSet.toJSONObject(), null, new HashMap<String, Long>() {{
+                    put("exp", expires);
+                }});
 
                 return Response.ok().entity(new TokenResponse(
                         accessToken,
