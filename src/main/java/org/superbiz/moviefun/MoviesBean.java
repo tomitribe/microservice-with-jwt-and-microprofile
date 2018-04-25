@@ -16,7 +16,9 @@
  */
 package org.superbiz.moviefun;
 
-import javax.ejb.Stateless;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
+import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -28,7 +30,8 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import java.util.List;
 
-@Stateless
+@Singleton
+@Lock(LockType.READ)
 public class MoviesBean {
 
     @PersistenceContext(unitName = "movie-unit")

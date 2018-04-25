@@ -22,7 +22,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -41,12 +40,11 @@ import java.util.List;
 
 @Path("movies")
 @Produces({"application/json"})
-public class MoviesRest {
+public class MoviesResource {
 
     @EJB
     private MoviesBean service;
 
-    /*
     @Inject
     @Claim("raw_token")
     private ClaimValue<String> rawToken;
@@ -61,7 +59,6 @@ public class MoviesRest {
 
     @Inject
     private JsonWebToken jwtPrincipal;
-    */
 
     @Context
     private SecurityContext securityContext;
@@ -80,7 +77,6 @@ public class MoviesRest {
 
     @POST
     @Consumes("application/json")
-//    @RolesAllowed("create")
     public Movie addMovie(Movie movie) {
         service.addMovie(movie);
         return movie;
@@ -89,7 +85,6 @@ public class MoviesRest {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
-//    @RolesAllowed("update")
     public Movie editMovie(
             @PathParam("id") final long id,
             Movie movie

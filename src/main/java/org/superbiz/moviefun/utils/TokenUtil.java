@@ -17,7 +17,7 @@
  * limitations under the License.
  *
  */
-package org.superbiz.moviefun;
+package org.superbiz.moviefun.utils;
 
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -52,8 +52,8 @@ import static net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 /**
  * Utilities for generating a JWT for testing
  */
-public class TokenUtils {
-    private TokenUtils() {
+public class TokenUtil {
+    private TokenUtil() {
     }
 
     /**
@@ -95,14 +95,33 @@ public class TokenUtils {
         if (invalidClaims == null) {
             invalidClaims = Collections.emptySet();
         }
-        InputStream contentIS = TokenUtils.class.getResourceAsStream(jsonResName);
+        InputStream contentIS = TokenUtil.class.getResourceAsStream(jsonResName);
         byte[] tmp = new byte[4096];
         int length = contentIS.read(tmp);
         byte[] content = new byte[length];
         System.arraycopy(tmp, 0, content, 0, length);
 
-        JSONParser parser = new JSONParser(DEFAULT_PERMISSIVE_MODE);
+        JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
         JSONObject jwtContent = (JSONObject) parser.parse(content);
+
+        return generateTokenString(jwtContent, invalidClaims, timeClaims);
+    }
+
+    /**
+     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
+     * test resource key, possibly with invalid fields.
+     *
+     * @param jwtContent   - the JSON Payload for the JWT
+     * @param invalidClaims - the set of claims that should be added with invalid values to test failure modes
+     * @param timeClaims    - used to return the exp, iat, auth_time claims
+     * @return the JWT string
+     * @throws Exception on parse failure
+     */
+    public static String generateTokenString(JSONObject jwtContent, Set<InvalidClaims> invalidClaims, Map<String, Long> timeClaims) throws Exception {
+        if (invalidClaims == null) {
+            invalidClaims = Collections.emptySet();
+        }
+
         // Change the issuer to INVALID_ISSUER for failure testing if requested
         if (invalidClaims.contains(InvalidClaims.ISSUER)) {
             jwtContent.put(Claims.iss.name(), "INVALID_ISSUER");
@@ -162,7 +181,7 @@ public class TokenUtils {
      * @throws Exception on decode failure
      */
     public static PrivateKey readPrivateKey(String pemResName) throws Exception {
-        InputStream contentIS = TokenUtils.class.getResourceAsStream(pemResName);
+        InputStream contentIS = TokenUtil.class.getResourceAsStream(pemResName);
         byte[] tmp = new byte[4096];
         int length = contentIS.read(tmp);
         return decodePrivateKey(new String(tmp, 0, length));
@@ -176,7 +195,7 @@ public class TokenUtils {
      * @throws Exception on decode failure
      */
     public static PublicKey readPublicKey(String pemResName) throws Exception {
-        InputStream contentIS = TokenUtils.class.getResourceAsStream(pemResName);
+        InputStream contentIS = TokenUtil.class.getResourceAsStream(pemResName);
         byte[] tmp = new byte[4096];
         int length = contentIS.read(tmp);
         return decodePublicKey(new String(tmp, 0, length));

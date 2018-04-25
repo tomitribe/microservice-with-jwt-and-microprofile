@@ -24,7 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 @Path("load")
-public class LoadRest {
+public class LoadDataResource {
     @EJB
     private MoviesBean moviesBean;
 

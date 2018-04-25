@@ -27,7 +27,7 @@ import java.util.Locale;
 @Path("/greeting")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GreetingService {
+public class GreetingResource {
 
     @GET
     public String message() {

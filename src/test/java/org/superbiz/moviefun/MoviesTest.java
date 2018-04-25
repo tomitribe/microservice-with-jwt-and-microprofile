@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,9 +29,12 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.superbiz.moviefun.rest.ApplicationConfig;
-import org.superbiz.moviefun.rest.LoadRest;
-import org.superbiz.moviefun.rest.MoviesRest;
-import org.superbiz.rest.GreetingService;
+import org.superbiz.moviefun.rest.LoadDataResource;
+import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
+import org.superbiz.moviefun.rest.MoviesResource;
+import org.superbiz.moviefun.utils.TokenUtil;
+import org.superbiz.rest.GreetingResource;
+import org.superbiz.moviefun.sts.STSResource;
 
 import java.net.URL;
 import java.util.Collection;
@@ -45,9 +48,10 @@ public class MoviesTest {
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, "test.war")
-                .addClasses(Movie.class, MoviesBean.class, MoviesTest.class, LoadRest.class)
-                .addClasses(MoviesRest.class, GreetingService.class, ApplicationConfig.class)
-                // .addClass(MoviesMPJWTConfigurationProvider.class)
+                .addClasses(Movie.class, MoviesBean.class, MoviesTest.class, LoadDataResource.class)
+                .addClasses(MoviesResource.class, GreetingResource.class, ApplicationConfig.class)
+                .addClass(STSResource.class)
+                .addClass(MoviesMPJWTConfigurationProvider.class)
                 .addAsWebInfResource(new StringAsset("<beans/>"), "beans.xml")
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml");
 
@@ -80,8 +84,7 @@ public class MoviesTest {
     }
 
     private String token() throws Exception {
-        HashMap<String, Long> timeClaims = new HashMap<>();
-        return TokenUtils.generateTokenString("/Token1.json", null, timeClaims);
+        return TokenUtil.generateTokenString("/Token1.json", null, new HashMap<>());
     }
 
 }
