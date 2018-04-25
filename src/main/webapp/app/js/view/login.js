@@ -19,46 +19,35 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates) {
+    var deps = ['app/js/templates', 'app/js/model/auth',
+        'lib/underscore', 'app/js/i18n', 'lib/backbone'];
+    define(deps, function (templates, auth, underscore, i18n, Backbone) {
 
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
             },
-            el: 'body',
-            showView: function (view) {
-                var me = this;
-                var contentarea = me.$('.ux-contentarea');
-                if (me.currentView) {
-                    me.currentView.$el.detach();
+            tagName: 'div',
+            className: 'ux-login',
+            filterOption: 'title',
+            events: {
+                'submit .form-login': function (evt) {
+                    evt.preventDefault();
+                    var me = this;
+                    console.log($(evt.target).serializeArray());
+                    //auth.login()
                 }
-                me.currentView = view;
-                me.currentView.render();
-                contentarea.append(me.currentView.el);
-                if (view.renderCallback) {
-                    view.renderCallback();
-                }
-                me.$('.ux-app-menu-item').removeClass('active');
-                var myMenuItem = me.$('li.ux-app-menu-item.' + view.className);
-                myMenuItem.addClass('active');
             },
-
             render: function () {
-                if (this.options.isRendered) {
-                    return this;
+                var me = this;
+                if (!this.options.isRendered) {
+                    me.$el.empty();
+                    me.$el.append(templates.getValue('login', {}));
+                    me.options.isRendered = true;
                 }
-                var html = templates.getValue('container', {
-                    userName: ''
-                });
-                this.$el.html(html);
-
-                // render it only once
-                this.options.isRendered = true;
                 return this;
             }
         });
-
-        return new View({});
+        return new View();
     });
 }());

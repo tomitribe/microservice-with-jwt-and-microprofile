@@ -21,9 +21,10 @@
 
     var files = [
         'container',
-        'application',
-        'application-table-row',
-        'application-table-paginator-button',
+        'login',
+        'main',
+        'main-table-row',
+        'main-table-paginator-button',
         'load-data-link',
         'movie'
     ];
@@ -36,17 +37,17 @@
     }
 
     // Preparing the "requirements" paths.
-    var requirements = [];
+    var requirements = ['lib/handlebars'];
     loop(files, function (file) {
         requirements.push('text!app/js/templates/' + file + '.handlebars');
     });
 
-    define(requirements, function () {
+    define(requirements, function (Handlebars) {
         var templates = {};
 
         var myArgs = arguments;
         loop(files, function (file, i) {
-            templates[file] = Handlebars.compile(myArgs[i]);
+            templates[file] = Handlebars.compile(myArgs[i+1]);
         });
 
         return {

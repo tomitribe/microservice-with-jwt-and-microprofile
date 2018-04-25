@@ -19,18 +19,18 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/view/application-table-row', 'app/js/view/application-table-paginator',
+    var deps = ['app/js/templates', 'app/js/view/main-table-row', 'app/js/view/main-table-paginator',
         'lib/underscore', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates, TableRowView, paginator, underscore, i18n) {
+    define(deps, function (templates, TableRowView, paginator, underscore, i18n, Backbone) {
 
         var View = Backbone.View.extend({
+            initialize: function(options){
+                this.options = options || {};
+            },
             tagName: 'div',
-            className: 'ux-application',
-
+            className: 'ux-main',
             loadDataLink: $(templates.getValue('load-data-link', {})),
-
             filterOption: 'title',
-
             events: {
                 'click .ux-filter': function (evt) {
                     evt.preventDefault();
@@ -57,17 +57,20 @@
                     var me = this;
                     me.trigger('clear-filter', {});
                 },
-                'click .ux-application': function (evt) {
+                'click .ux-main': function (evt) {
                     evt.preventDefault();
                     var me = this;
                     me.trigger('navigate', {
-                        path: 'application'
+                        path: 'main'
                     });
                 },
                 'click .ux-add-btn': function (evt) {
                     evt.preventDefault();
                     var me = this;
                     me.trigger('add', {});
+                },
+                'keydown .ux-filter-field': function (evt) {
+                    console.log(evt);
                 }
             },
 
@@ -88,7 +91,7 @@
                 var me = this;
                 if (!this.options.isRendered) {
                     me.$el.empty();
-                    me.$el.append(templates.getValue('application', {}));
+                    me.$el.append(templates.getValue('main', {}));
                     me.loadDataLink.on('click', function (evt) {
                         evt.preventDefault();
                         me.trigger('load-sample', {});

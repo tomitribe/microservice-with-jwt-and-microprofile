@@ -17,7 +17,7 @@
  "use strict";
  */
 
-define(['lib/underscore', 'lib/handlebars', 'app/js/log'], function (underscore) {
+define(['lib/underscore', 'lib/handlebars', 'app/js/log'], function (_, Handlebars) {
     'use strict';
 
     var missing = Handlebars.compile('[!{{key}}!]');
@@ -38,7 +38,7 @@ define(['lib/underscore', 'lib/handlebars', 'app/js/log'], function (underscore)
         'dummy': ''
     };
 
-    underscore.each(underscore.keys(messages), function (key) {
+    _.each(_.keys(messages), function (key) {
         var template = Handlebars.compile(messages[key]);
         messages[key] = template;
     });
