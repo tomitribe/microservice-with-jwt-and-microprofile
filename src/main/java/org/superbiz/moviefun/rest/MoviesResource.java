@@ -41,12 +41,11 @@ import java.util.List;
 
 @Path("movies")
 @Produces({"application/json"})
-public class MoviesRest {
+public class MoviesResource {
 
     @EJB
     private MoviesBean service;
 
-    /*
     @Inject
     @Claim("raw_token")
     private ClaimValue<String> rawToken;
@@ -61,7 +60,6 @@ public class MoviesRest {
 
     @Inject
     private JsonWebToken jwtPrincipal;
-    */
 
     @Context
     private SecurityContext securityContext;
@@ -80,7 +78,7 @@ public class MoviesRest {
 
     @POST
     @Consumes("application/json")
-//    @RolesAllowed("create")
+    @RolesAllowed("create")
     public Movie addMovie(Movie movie) {
         service.addMovie(movie);
         return movie;
@@ -89,7 +87,7 @@ public class MoviesRest {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
-//    @RolesAllowed("update")
+    @RolesAllowed("update")
     public Movie editMovie(
             @PathParam("id") final long id,
             Movie movie
@@ -100,7 +98,7 @@ public class MoviesRest {
 
     @DELETE
     @Path("{id}")
-//    @RolesAllowed("delete")
+    @RolesAllowed("delete")
     public void deleteMovie(@PathParam("id") long id) {
         service.deleteMovie(id);
     }

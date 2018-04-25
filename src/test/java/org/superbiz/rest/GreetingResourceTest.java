@@ -32,10 +32,10 @@ import static org.junit.Assert.assertEquals;
 
 @EnableServices(value = "jaxrs", httpDebug = true)
 @RunWith(ApplicationComposer.class)
-public class GreetingServiceTest {
+public class GreetingResourceTest {
 
     @Module
-    @Classes(GreetingService.class)
+    @Classes(GreetingResource.class)
     public WebApp app() {
         return new WebApp().contextRoot("test");
     }

@@ -65,7 +65,7 @@
         <artifactId>tomee-maven-plugin</artifactId>
         <version>${tomee.version}</version>
         <configuration>
-          <!--<tomeeClassifier>microprofile</tomeeClassifier>-->
+          <tomeeClassifier>microprofile</tomeeClassifier>
           <args>-Xmx512m -XX:PermSize=256m</args>
           <config>${project.basedir}/src/main/tomee/</config>
         </configuration>
@@ -121,7 +121,6 @@
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
       <version>4.23</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -242,14 +241,12 @@
           <version>${tomee.version}</version>
           <scope>test</scope>
         </dependency>
-        <!--
         <dependency>
           <groupId>org.apache.tomee</groupId>
           <artifactId>mp-jwt</artifactId>
           <version>${tomee.version}</version>
           <scope>provided</scope>
         </dependency>
-        -->
       </dependencies>
     </profile>
     <profile>
@@ -266,7 +263,6 @@
           <artifactId>apache-tomee</artifactId>
           <version>${tomee.version}</version>
           <type>zip</type>
-          <!--<classifier>microprofile</classifier>-->
           <scope>test</scope>
         </dependency>
       </dependencies>
