@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates, il8n, Backbone) {
+    var deps = ['app/js/templates', 'app/js/tools/i18n', 'lib/backbone', 'lib/crypto', 'app/js/tools/alert.view'];
+    define(deps, function (templates, il8n, Backbone, CryptoJS, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -37,6 +37,7 @@
                                 router.navigate('login', {
                                     trigger: true
                                 });
+                                AlertView.show('Success', 'logged out', 'success');
                             }
                         )
                 }
@@ -53,11 +54,19 @@
 
                 var access = window.auth.getAuth().then(
                     function (value) {
+                        me.$('.ux-logout').attr("title", window.auth.get('username'));
+                        me.$('.ux-avatar').attr("src", "https://www.gravatar.com/avatar/" + CryptoJS.MD5((window.auth.get('email') || '').trim()).toString() + "?s=90&d=retro");
                         me.$('.ux-logout').show("fast");
                     }
                 ).catch(
                     function () {
-                        me.$('.ux-logout').hide("fast");
+                        me.$('.ux-logout').hide(
+                            "fast",
+                            function(){
+                                me.$('.ux-logout').attr("title", "");
+                                me.$('.ux-avatar').attr("src", "");
+                            }
+                        );
                     }
                 );
 

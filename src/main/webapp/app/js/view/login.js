@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'app/js/i18n', 'lib/backbone'];
-    define(deps, function (templates, underscore, i18n, Backbone) {
+    var deps = ['app/js/templates', 'lib/underscore', 'app/js/tools/i18n', 'lib/backbone', 'app/js/tools/alert.view'];
+    define(deps, function (templates, underscore, i18n, Backbone, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -42,9 +42,7 @@
                         }
                     ).catch(
                         function (e) {
-                            router.navigate('/login', {
-                                trigger: true
-                            });
+                            AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
                         }
                     );
                 }

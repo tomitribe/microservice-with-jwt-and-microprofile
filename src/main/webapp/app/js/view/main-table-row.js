@@ -34,7 +34,6 @@
                     me.trigger('delete', {
                         model: me.model
                     });
-                    me.remove();
                 },
                 'click .ux-edit-row': function (evt) {
                     evt.preventDefault();

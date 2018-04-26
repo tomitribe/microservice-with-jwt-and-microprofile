@@ -26,7 +26,8 @@
         'main-table-row',
         'main-table-paginator-button',
         'load-data-link',
-        'movie'
+        'movie',
+        'alert'
     ];
 
     function loop(values, callback) {

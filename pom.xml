@@ -229,6 +229,16 @@
       <artifactId>font-awesome</artifactId>
       <version>5.0.10</version>
     </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>jwt-decode</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>crypto-js</artifactId>
+      <version>3.1.9-1</version>
+    </dependency>
   </dependencies>
 
   <profiles>

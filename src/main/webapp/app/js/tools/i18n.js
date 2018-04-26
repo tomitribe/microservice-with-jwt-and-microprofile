@@ -17,7 +17,7 @@
  "use strict";
  */
 
-define(['lib/underscore', 'lib/handlebars', 'app/js/log'], function (_, Handlebars) {
+define(['lib/underscore', 'lib/handlebars', 'app/js/tools/log'], function (_, Handlebars) {
     'use strict';
 
     var missing = Handlebars.compile('[!{{key}}!]');
