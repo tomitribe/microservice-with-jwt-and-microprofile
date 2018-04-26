@@ -29,10 +29,11 @@
         'app/js/model/movies',
         'app/js/model/movie',
         'app/js/model/auth',
-        'app/js/i18n',
+        'app/js/tools/i18n',
+        'app/js/tools/alert.view',
         'lib/less', 'lib/backbone', 'lib/jquery', 'lib/bootstrap'
     ];
-    define(deps, function (containerView, loginView, mainView, paginator, MovieView, underscore, moviesList, MovieModel, AuthModel, i18n) {
+    define(deps, function (containerView, loginView, mainView, paginator, MovieView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
         var auth = new AuthModel();
         window.auth = auth;
         var max = 5;
@@ -141,6 +142,9 @@
                     data: {},
                     success: function (data) {
                         router.showMain();
+                    },
+                    error: function () {
+                        AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
                     }
                 });
             });
@@ -149,6 +153,9 @@
                 data.model.destroy({
                     success: function () {
                         router.showMain(appState.page, appState.fieldName, appState.fieldValue);
+                    },
+                    error: function () {
+                        AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
                     }
                 });
             });
@@ -163,6 +170,9 @@
                         success: function () {
                             view.remove();
                             loadPage(appState.page, appState.fieldName, appState.fieldValue);
+                        },
+                        error: function () {
+                            AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
                         }
                     });
                 });

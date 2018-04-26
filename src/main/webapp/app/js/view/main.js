@@ -20,7 +20,7 @@
     'use strict';
 
     var deps = ['app/js/templates', 'app/js/view/main-table-row', 'app/js/view/main-table-paginator',
-        'lib/underscore', 'app/js/i18n', 'lib/backbone'];
+        'lib/underscore', 'app/js/tools/i18n', 'lib/backbone'];
     define(deps, function (templates, TableRowView, paginator, underscore, i18n, Backbone) {
 
         var View = Backbone.View.extend({

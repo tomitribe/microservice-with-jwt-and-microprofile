@@ -19,13 +19,15 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'lib/backbone'];
-    define(deps, function (_, Backbone) {
+    var deps = ['lib/underscore', 'lib/backbone', 'jwt_decode'];
+    define(deps, function (_, Backbone, jwtDecode) {
         var AuthModel = Backbone.Model.extend({
             urlRoot: window.ux.ROOT_URL + 'rest/token',
             defaults: {
                 auth: false,
                 username: '',
+                email: '',
+                groups: '',
                 access_token: '',
                 token_type: ''
             },
@@ -43,13 +45,17 @@
             login: function(creds) {
                 var me = this;
                 return new Promise( function (res, rej) {
+                    if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
                     $.post( me.urlRoot, creds )
                         .done(
                             function (resp) {
-                                if (!resp || !resp['access_token']) rej(resp);
+                                var result = jwtDecode(resp['access_token']);
+                                if (!resp || !resp['access_token'] || !result) return rej(resp);
                                 me.set({
                                     auth: true,
-                                    username: creds['username'],
+                                    username: result['username'],
+                                    email: result['email'],
+                                    groups: result['groups'],
                                     access_token: resp['access_token'],
                                     token_type: resp['token_type']
                                 });
@@ -66,6 +72,8 @@
                     me.set({
                         auth: false,
                         username: '',
+                        email: '',
+                        groups: '',
                         access_token: '',
                         token_type: ''
                     });
