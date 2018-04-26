@@ -75,8 +75,9 @@ public class STSResource {
         }
 
         final List<String> scopes = new ArrayList<>();
-        final long expiresIn = TimeUnit.SECONDS.toMillis(300);
-        final long expires = System.currentTimeMillis() + expiresIn;
+        final int currentTimeInSecs = TokenUtil.currentTimeInSecs();
+        final long expiresIn = 300; // still in seconds
+        final long expires = currentTimeInSecs + expiresIn;
 
         // validate grants (especially the supported grants)
         if ("password".equalsIgnoreCase(grantType)) {
@@ -117,7 +118,7 @@ public class STSResource {
                 return Response.ok().entity(new TokenResponse(
                         accessToken,
                         "bearer",
-                        Math.round((expires - System.currentTimeMillis()) / 1000),
+                        Math.round(expires - TokenUtil.currentTimeInSecs()),
                         null, // refresh not supported
                         StringUtils.join(scopes, ' '))).build();
 

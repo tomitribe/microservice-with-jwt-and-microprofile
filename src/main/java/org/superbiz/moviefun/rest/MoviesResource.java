@@ -34,8 +34,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class MoviesResource {
     private MoviesBean service;
 
     @Inject
-    @Claim("raw_token")
+    @Claim("username")
     private ClaimValue<String> rawToken;
 
     @Inject
@@ -78,8 +80,10 @@ public class MoviesResource {
 
     @POST
     @Consumes("application/json")
-    @RolesAllowed("create")
     public Movie addMovie(Movie movie) {
+        if (!securityContext.isUserInRole("create")) {
+            throw new WebApplicationException("Bad permission.", Response.Status.FORBIDDEN);
+        }
         service.addMovie(movie);
         return movie;
     }
