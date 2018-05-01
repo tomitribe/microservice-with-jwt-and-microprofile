@@ -23,6 +23,7 @@
     define(deps, function (_, Backbone, jwtDecode) {
         var AuthModel = Backbone.Model.extend({
             urlRoot: window.ux.ROOT_URL + 'rest/token',
+            //urlRoot: 'http://localhost:8080/rest/token',
             defaults: {
                 auth: false,
                 username: '',

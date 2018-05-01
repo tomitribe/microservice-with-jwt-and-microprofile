@@ -1,0 +1,24 @@
+{
+  "prefix": "Bearer",
+  "header": "Authorization",
+  "name": "movies",
+  "refreshAllowed": true,
+  "requiresClient": false,
+  "allowedGrants": [
+    "password",
+    "client_credentials",
+    "refresh_token"
+  ],
+  "externalSigning": {
+    "signingAlgorithm": "RS256",
+    "publicPrivateKeys": [
+      {
+        "type": "RSA",
+        "algorithm": "RSA-SHA256",
+        "id": "d6bf903be409b90b",
+        "privateValue": "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQC3wO1+SVwxAdF1gmSSx2Bj3cG0/b94kC7DS3eOsGOSKrjPpwxW\nSnrV32SieV2esdZPk69BeUiWJ0UN8JOBnQT0PQkuf7KkGUtN/YtRHbgU16CyltbQ\nnaSiWk0HXXyrL+9TVElRuPBgSjOpAcYYZgEzm5k6Q/TOKuCE4EgL+LscbQIDAQAB\nAoGBAJ9XPxpphvZAO2AIyCm3llBDNfw6pdRoQwS65lvnfRB813HJy5rwTwAzDVMO\npy47zDmJOUovX9BFEU57NY4JmQatpLwLM8A5bQ4W8gZFgHaEdOr+1ZbuiWdJCAfd\nc6JRJNbRR9ZNzN8Opa5HVkhsN/MigO08bLmjt2RNkN8vQUBJAkEA+82LB447Ofwe\nC/V7ecbnbpM7G2r0Ui3fnQeyqF9447tXws5UWr/9qfrrNuTdBB0iPRHKYu+YyEwa\nT2DxSckAUwJBALrRA7v3IaFYr29GHVIbabuQA6sYlqAGIH0Jk7ZHTFAnJ1Eo70Uc\nWomkFVTfhXIfv6AnF6vttkCjELrPEGBK2D8CQQCw9TVUnP9Ac88F5oHdBgzU58Ft\nNk/3hOeWareCnn3NxXYaoHglwrFZCM7OqC4u2u6Z7mvF9c3wTZNb36wSh6CjAkEA\nmGVlXHKPdqV4B5f010QRjrY+p9ZZGZWl7xpe6zViZYhrJGP2PDSTDvFRjXkBzUVk\n9uqs/s3d/QCI5zt/Km4j1QJAe8uEYF/80BY6xcYgMyR0Zaa9xDHz+HCTmLzL4yvQ\nZeZvb9fsu01//7mdLZRzeJypwrk/03SGRbMeL2hiWOpDZA==\n-----END RSA PRIVATE KEY-----\n",
+        "active": true
+      }
+    ]
+  }
+}
