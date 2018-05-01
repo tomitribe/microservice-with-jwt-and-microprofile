@@ -1,0 +1,12 @@
+{
+  "username": "nick",
+  "email": "nick@superbiz.com",
+  "displayName": "Nick",
+  "credentials": {
+    "password": {
+      "active": true,
+      "value": "password",
+      "createdDate": "2018-04-29T20:22:01Z"
+    }
+  }
+}

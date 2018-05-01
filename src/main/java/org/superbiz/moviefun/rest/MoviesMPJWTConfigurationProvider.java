@@ -17,6 +17,7 @@
 package org.superbiz.moviefun.rest;
 
 import org.apache.tomee.microprofile.jwt.config.JWTAuthContextInfo;
+import org.superbiz.moviefun.utils.TokenUtil;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
@@ -34,20 +35,13 @@ public class MoviesMPJWTConfigurationProvider {
     public static final String ISSUED_BY = "https://server.example.com";
 
     @Produces
-    Optional<JWTAuthContextInfo> getOptionalContextInfo() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    Optional<JWTAuthContextInfo> getOptionalContextInfo() throws Exception {
         JWTAuthContextInfo contextInfo = new JWTAuthContextInfo();
 
         // todo use MP Config to load the configuration
         contextInfo.setIssuedBy(ISSUED_BY);
 
-        final String pemEncoded = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEq" +
-                "Fyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwR" +
-                "TYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5e" +
-                "UF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9" +
-                "AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYn" +
-                "sIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9x" +
-                "nQIDAQAB";
-        byte[] encodedBytes = Base64.getDecoder().decode(pemEncoded);
+        byte[] encodedBytes = TokenUtil.readPublicKey("/publicKey-2.pem").getEncoded();
 
         final X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedBytes);
         final KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -59,7 +53,7 @@ public class MoviesMPJWTConfigurationProvider {
     }
 
     @Produces
-    JWTAuthContextInfo getContextInfo() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    JWTAuthContextInfo getContextInfo() throws Exception {
         return getOptionalContextInfo().get();
     }
 }

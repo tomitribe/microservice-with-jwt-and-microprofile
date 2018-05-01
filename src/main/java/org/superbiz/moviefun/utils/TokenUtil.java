@@ -51,6 +51,9 @@ import java.util.Set;
  * Utilities for generating a JWT for testing
  */
 public class TokenUtil {
+
+    public static final String PRIVATE_KEY_PEM = "/privateKey-2.pem";
+
     private TokenUtil() {
     }
 
@@ -160,7 +163,7 @@ public class TokenUtil {
         } else {
 
             // Use the test private key associated with the test public key for a valid signature
-            pk = readPrivateKey("/privateKey.pem");
+            pk = readPrivateKey(PRIVATE_KEY_PEM);
         }
 
         // Create RSA-signer with the private key
@@ -176,7 +179,7 @@ public class TokenUtil {
         }
 
         final JWSHeader jwtHeader = new JWSHeader.Builder(alg)
-                .keyID("/privateKey.pem")
+                .keyID(PRIVATE_KEY_PEM)
                 .type(JOSEObjectType.JWT)
                 .build();
 
