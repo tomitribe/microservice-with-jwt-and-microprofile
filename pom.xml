@@ -247,6 +247,26 @@
       <artifactId>crypto-js</artifactId>
       <version>3.1.9-1</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-core</artifactId>
+      <version>1.1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-mapper</artifactId>
+      <version>1.1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -268,30 +288,11 @@
           <version>${tomee.version}</version>
           <scope>test</scope>
         </dependency>
-        <dependency>
-          <groupId>org.apache.tomee</groupId>
-          <artifactId>mp-jwt</artifactId>
-          <version>${tomee.version}</version>
-          <scope>provided</scope>
-        </dependency>
       </dependencies>
     </profile>
     <profile>
       <id>arquillian-tomee-remote</id>
       <dependencies>
-        <dependency>
-          <groupId>org.apache.tomee</groupId>
-          <artifactId>arquillian-tomee-remote</artifactId>
-          <version>${tomee.version}</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.tomee</groupId>
-          <artifactId>apache-tomee</artifactId>
-          <version>${tomee.version}</version>
-          <type>zip</type>
-          <scope>test</scope>
-        </dependency>
       </dependencies>
     </profile>
   </profiles>
