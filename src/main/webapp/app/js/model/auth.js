@@ -23,7 +23,7 @@
     define(deps, function (_, Backbone, jwtDecode) {
         var AuthModel = Backbone.Model.extend({
             urlRoot: window.ux.ROOT_URL + 'rest/token',
-            //urlRoot: 'http://localhost:8080/rest/token',
+            //urlRoot: 'http://localhost:8080/oauth2/token',
             defaults: {
                 auth: false,
                 username: '',
@@ -49,7 +49,8 @@
                     if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
                     $.ajax({
                         method: "POST",
-                        url: me.urlRoot,
+                        //url: me.urlRoot,
+                        url: 'http://localhost:8080/oauth2/token',
                         data: creds,
                         contentType: 'application/x-www-form-urlencoded'
                     })

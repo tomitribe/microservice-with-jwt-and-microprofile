@@ -52,7 +52,7 @@ import java.util.Set;
  */
 public class TokenUtil {
 
-    public static final String PRIVATE_KEY_PEM = "/privateKey-2.pem";
+    public static final String PRIVATE_KEY_PEM = "/privateKey.pem";
 
     private TokenUtil() {
     }

@@ -37,8 +37,8 @@ import java.util.concurrent.TimeUnit;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-//@Startup
-//@Singleton
+@Startup
+@Singleton
 public class GatewayProvisioning {
     private WebClient webClient;
 

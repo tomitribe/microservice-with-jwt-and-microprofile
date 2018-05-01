@@ -41,7 +41,7 @@ public class MoviesMPJWTConfigurationProvider {
         // todo use MP Config to load the configuration
         contextInfo.setIssuedBy(ISSUED_BY);
 
-        byte[] encodedBytes = TokenUtil.readPublicKey("/publicKey-2.pem").getEncoded();
+        byte[] encodedBytes = TokenUtil.readPublicKey("/publicKey.pem").getEncoded();
 
         final X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedBytes);
         final KeyFactory kf = KeyFactory.getInstance("RSA");
