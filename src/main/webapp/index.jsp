@@ -29,6 +29,7 @@ limitations under the License.
     window.ux = window.ux || {};
     window.ux.SESSION_ID = "<%=request.getSession().getId()%>";
     window.ux.ROOT_URL = "<c:url value='/'/>".replace(';jsessionid=' + window.ux.SESSION_ID, '');
+    window.tokenHost = "<c:out value="myEnvironment.tokenHost">";
   </script>
   <script src="<c:url value='/app/config.js'/>"></script>
   <script src="<c:url value='/app/js/start.js'/>"></script>
