@@ -17,3 +17,7 @@ mvn clean install -DskipTests tomee:run
 ```
 
 It should start on port 8181 so it does not clash with the Gateway
+
+# convert a private key from traditional format to pkcs#8 format.
+
+openssl pkcs8 -topk8 -inform pem -in src/main/resources/privateKey.pem -outform pem -nocrypt -out src/main/resources/privateKey-pkcs8.pem
