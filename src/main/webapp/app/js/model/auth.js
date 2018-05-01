@@ -49,8 +49,8 @@
                     if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
                     $.ajax({
                         method: "POST",
-                        //url: me.urlRoot,
-                        url: 'http://localhost:8080/oauth2/token',
+                        url: me.urlRoot,
+                        //url: 'http://localhost:8080/oauth2/token',
                         data: creds,
                         contentType: 'application/x-www-form-urlencoded'
                     })
