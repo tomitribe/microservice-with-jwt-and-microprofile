@@ -144,7 +144,7 @@
                         router.showMain();
                     },
                     error: function () {
-                        AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
+                        AlertView.show('Failed', 'Failed to load movies (forbidden)', 'danger');
                     }
                 });
             });
@@ -155,12 +155,12 @@
                         router.showMain(appState.page, appState.fieldName, appState.fieldValue);
                     },
                     error: function () {
-                        AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
+                        AlertView.show('Failed', 'Failed to delete movie (forbidden)', 'danger');
                     }
                 });
             });
 
-            function showMovieWindow(model) {
+            function showMovieWindow(model, nw) {
                 var view = new MovieView({
                     model: model
                 });
@@ -172,7 +172,7 @@
                             loadPage(appState.page, appState.fieldName, appState.fieldValue);
                         },
                         error: function () {
-                            AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
+                            AlertView.show('Failed', 'Failed to ' + (nw ? 'create' : 'update') + ' movie (forbidden)', 'danger');
                         }
                     });
                 });
@@ -181,7 +181,7 @@
             }
 
             mainView.on('add', function () {
-                showMovieWindow(new MovieModel({}));
+                showMovieWindow(new MovieModel({}), true);
             });
 
             mainView.on('edit', function (data) {

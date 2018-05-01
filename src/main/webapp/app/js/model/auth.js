@@ -47,22 +47,27 @@
                 var me = this;
                 return new Promise( function (res, rej) {
                     if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
-                    $.post( me.urlRoot, creds )
-                        .done(
-                            function (resp) {
-                                var result = jwtDecode(resp['access_token']);
-                                if (!resp || !resp['access_token'] || !result) return rej(resp);
-                                me.set({
-                                    auth: true,
-                                    username: result['username'],
-                                    email: result['email'],
-                                    groups: result['groups'],
-                                    access_token: resp['access_token'],
-                                    token_type: resp['token_type']
-                                });
-                                res(me.get('auth'));
-                            })
-                        .fail(rej);
+                    $.ajax({
+                        method: "POST",
+                        url: me.urlRoot,
+                        data: creds,
+                        contentType: 'application/x-www-form-urlencoded'
+                    })
+                    .done(
+                        function (resp) {
+                            var result = jwtDecode(resp['access_token']);
+                            if (!resp || !resp['access_token'] || !result) return rej(resp);
+                            me.set({
+                                auth: true,
+                                username: result['username'],
+                                email: result['email'],
+                                groups: result['groups'],
+                                access_token: resp['access_token'],
+                                token_type: resp['token_type']
+                            });
+                            res(me.get('auth'));
+                        })
+                    .fail(rej);
                 });
             },
             logout: function() {
