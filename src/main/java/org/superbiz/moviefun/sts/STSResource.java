@@ -18,8 +18,6 @@ package org.superbiz.moviefun.sts;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.apache.commons.lang.StringUtils;
-import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
-import org.superbiz.moviefun.utils.TokenUtil;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -33,7 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Path("token")
 @Produces(MediaType.APPLICATION_JSON)
@@ -75,9 +72,6 @@ public class STSResource {
         }
 
         final List<String> scopes = new ArrayList<>();
-        final int currentTimeInSecs = TokenUtil.currentTimeInSecs();
-        final long expiresIn = 300; // still in seconds
-        final long expires = currentTimeInSecs + expiresIn;
 
         // validate grants (especially the supported grants)
         if ("password".equalsIgnoreCase(grantType)) {
@@ -106,19 +100,16 @@ public class STSResource {
                     .claim("email", username + "@superbiz.org")
                     .subject(username)
                     .audience("mp-jwt-moviefun")
-                    .issuer(MoviesMPJWTConfigurationProvider.ISSUED_BY)
                     .build();
 
             final String accessToken;
             try {
-                accessToken = TokenUtil.generateTokenString(claimsSet.toJSONObject(), null, new HashMap<String, Long>() {{
-                    put("exp", expires);
-                }});
+                accessToken = "";
 
                 return Response.ok().entity(new TokenResponse(
                         accessToken,
                         "bearer",
-                        Math.round(expires - TokenUtil.currentTimeInSecs()),
+                        Math.round(300),
                         null, // refresh not supported
                         StringUtils.join(scopes, ' '))).build();
 

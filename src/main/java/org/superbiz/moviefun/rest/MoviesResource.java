@@ -16,7 +16,6 @@
  */
 package org.superbiz.moviefun.rest;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.ClaimValue;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -25,7 +24,6 @@ import org.superbiz.moviefun.MoviesBean;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,32 +40,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Path("movies")
 @Produces({"application/json"})
-@ApplicationScoped
 public class MoviesResource {
-
-    private static final Logger LOGGER = Logger.getLogger(MoviesResource.class.getName());
 
     @EJB
     private MoviesBean service;
 
-    @Inject
-    @Claim("username")
-    private ClaimValue<String> username;
-
-    @Inject
-    @Claim("email")
-    private ClaimValue<String> email;
-
-    @Inject
-    @Claim("jti")
-    private ClaimValue<String> jti;
-
-    @Inject
-    private JsonWebToken jwtPrincipal;
 
     @Context
     private SecurityContext securityContext;
@@ -75,36 +55,18 @@ public class MoviesResource {
     @GET
     @Path("{id}")
     public Movie find(@PathParam("id") Long id) {
-        LOGGER.info("find: " + toIdentityString());
         return service.find(id);
-    }
-
-    private String toIdentityString() {
-        if (jwtPrincipal == null) {
-            return "no authenticated user.";
-        }
-
-        final StringBuilder builder = new StringBuilder();
-
-        builder.append(username);
-        builder.append(String.format(" (jti=%s)", jti));
-        builder.append(String.format(" (email=%s)", email));
-        builder.append(String.format(" (groups=%s)", StringUtils.join(jwtPrincipal.getGroups(), ", ")));
-
-        return builder.toString();
     }
 
     @GET
     public List<Movie> getMovies(@QueryParam("first") Integer first, @QueryParam("max") Integer max,
                                  @QueryParam("field") String field, @QueryParam("searchTerm") String searchTerm) {
-        LOGGER.info("list: " + toIdentityString());
         return service.getMovies(first, max, field, searchTerm);
     }
 
     @POST
     @Consumes("application/json")
     public Movie addMovie(Movie movie) {
-        LOGGER.info("add: " + toIdentityString());
         if (!securityContext.isUserInRole("create")) {
             throw new WebApplicationException("Bad permission.", Response.Status.FORBIDDEN);
         }
@@ -120,7 +82,6 @@ public class MoviesResource {
             @PathParam("id") final long id,
             Movie movie
     ) {
-        LOGGER.info("edit: " + toIdentityString());
         service.editMovie(movie);
         return movie;
     }
@@ -129,7 +90,6 @@ public class MoviesResource {
     @Path("{id}")
     @RolesAllowed("delete")
     public void deleteMovie(@PathParam("id") long id) {
-        LOGGER.info("delete: " + toIdentityString());
         service.deleteMovie(id);
     }
 
@@ -137,7 +97,6 @@ public class MoviesResource {
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public int count(@QueryParam("field") String field, @QueryParam("searchTerm") String searchTerm) {
-        LOGGER.info("count: " + toIdentityString());
         return service.count(field, searchTerm);
     }
 

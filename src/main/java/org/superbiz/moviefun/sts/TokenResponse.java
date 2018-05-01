@@ -29,23 +29,27 @@ import java.util.UUID;
  * section</a> of the spec for more info.
  */
 
+@XmlRootElement
 public class TokenResponse implements Serializable {
     @JohnzonProperty("access_token")
-    private final String accessToken;
+    private String accessToken;
 
     @JohnzonProperty("token_type")
-    private final String tokenType;
+    private String tokenType;
 
     @JohnzonProperty("expires_in")
-    private final long expiresIn;
+    private long expiresIn;
 
     @JohnzonProperty("refresh_token")
-    private final String refreshToken;
+    private String refreshToken;
 
     @JohnzonProperty("id_token")
-    private final String idToken;
+    private String idToken;
 
-    private final String scope;
+    private String scope;
+
+    public TokenResponse() {
+    }
 
     @ConstructorProperties({"accessToken", "tokenType", "expiresIn", "refreshToken", "scope"})
     public TokenResponse(final String accessToken, final String tokenType, final long expiresIn, final String refreshToken, final String scope) {
@@ -91,5 +95,29 @@ public class TokenResponse implements Serializable {
 
     public String getTokenType() {
         return tokenType;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

@@ -18,9 +18,11 @@ package org.superbiz.moviefun.sts;
 
 import org.apache.johnzon.mapper.JohnzonProperty;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 
+@XmlRootElement
 public class TokenErrorResponse implements Serializable {
     @JohnzonProperty("error")
     private final String error;
