@@ -104,14 +104,22 @@ public class STSResource {
 
             final String accessToken;
             try {
-                accessToken = "";
+                accessToken = "eyJraWQiOiIzODYyZjBiYjNlZjVhYWUyIiwiY3R5IjoianNvbiIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0." +
+                        "eyJ0b2tlbi10eXBlIjoiYWNjZXNzLXRva2VuIiwibmJmIjoxNTI1MTgwMTYyLCJyb2xlcyI6W10sIm5hbWUiOiJ1c2VyIiwia" +
+                        "XNzIjoiXC9vYXV0aDJcL3Rva2VuIiwiZ3JvdXBzIjpbXSwidGFnLWludGVybmFsIjp7ImdyYW50LXR5cGUiOiJwYXNzd29y" +
+                        "ZCIsInByb2ZpbGUiOiJiZWFyZXIiLCJjbGllbnQtaWQiOiJjbGllbnRfaWQiLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcm5hbWUi" +
+                        "OiJ1c2VyIn0sImV4cCI6MTUyNTE4MTk2MiwiaWF0IjoxNTI1MTgwMTYyLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwianRpIj" +
+                        "oiN2Q1Mjg1ZWI3MmM3ZTAyMCJ9.GsOPyiITIV0BIBpGG_d3TPNgjE2MYhWH_t9JYD1ahsxddubU64927RITnPDgKlgl1uFC" +
+                        "W5OPn4FtoSb2e9HFpUTh1rqofb-UK9IMlcHOc7ZkZvOjXigZGwGIL4xZ4aPi0wpAcF4_KYinZeWkCdLCDvk_4bSFaK2seSIr0QUNZ4g";
 
-                return Response.ok().entity(new TokenResponse(
+                TokenResponse response = new TokenResponse(
                         accessToken,
                         "bearer",
                         Math.round(300),
                         null, // refresh not supported
-                        StringUtils.join(scopes, ' '))).build();
+                        StringUtils.join(scopes, ' '));
+
+                return Response.ok().entity(response).cookie(response.toCookie()).build();
 
             } catch (final Exception e) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(new TokenErrorResponse(
