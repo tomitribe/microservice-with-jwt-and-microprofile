@@ -60,7 +60,8 @@
                         director: me.model.get('director'),
                         genre: me.model.get('genre'),
                         rating: me.model.get('rating'),
-                        year: me.model.get('year')
+                        year: me.model.get('year'),
+                        id: me.model.get('id')
                     }));
                     me.options.isRendered = true;
                 }

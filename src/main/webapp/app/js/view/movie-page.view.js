@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/tools/id'];
-    define(deps, function (templates, _, Backbone) {
+    var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/tools/alert.view'];
+    define(deps, function (templates, _, Backbone, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -28,7 +28,27 @@
             tagName: 'div',
             className: 'ux-movie-page',
             events: {
-                
+                'submit .form-comment': function (evt) {
+                    evt.preventDefault();
+                    var me = this,
+                        data = $(evt.target).serialize(),
+                        router = window.BackboneApp.getRouter(),
+                        id = me.model.get('id');
+                    console.log(id);
+                    if(!id) return ;
+                    $.ajax({
+                        method: "POST",
+                        url: window.ux.ROOT_URL + 'rest/movies/' + id + '/comment',
+                        data: data,
+                        contentType: 'application/x-www-form-urlencoded',
+                        success:function(data) {
+                            console.log(data);
+                        },
+                        error: function(e) {
+                            AlertView.show('Failed', 'Failed to comment (' + e.status + ')', 'danger');
+                        }
+                    });
+                }
             },
             render: function () {
                 var me = this;
@@ -39,6 +59,8 @@
                     genre: me.model.get('genre'),
                     rating: me.model.get('rating'),
                     year: me.model.get('year'),
+                    comments: me.model.get('comments'),
+                    id: me.model.get('id'),
                     currentYear: new Date().getFullYear()
                 }));
                 return me;
