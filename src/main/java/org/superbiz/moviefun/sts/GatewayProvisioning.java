@@ -95,6 +95,11 @@ public class GatewayProvisioning {
         final JsonObject object = reader.readObject();
 
         webClient.reset()
+                .path("/profile/oauth2/movies")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .delete();
+
+        webClient.reset()
                  .path("/profile/oauth2/")
                  .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
                  .type(MediaType.APPLICATION_JSON_TYPE)
@@ -123,6 +128,11 @@ public class GatewayProvisioning {
         final JsonObject object = reader.readObject();
 
         webClient.reset()
+                .path("/account/" + account)
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .delete();
+
+        webClient.reset()
                  .path("/account/")
                  .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
                  .type(MediaType.APPLICATION_JSON_TYPE)
@@ -134,6 +144,11 @@ public class GatewayProvisioning {
         final URL resource = GatewayProvisioning.class.getClassLoader().getResource("route.json");
         final JsonReader reader = Json.createReader(resource.openStream());
         final JsonObject object = reader.readObject();
+
+        webClient.reset()
+                .path("/route/movies")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .delete();
 
         webClient.reset()
                  .path("/route/")

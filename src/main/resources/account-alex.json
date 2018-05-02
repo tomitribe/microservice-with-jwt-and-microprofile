@@ -2,6 +2,23 @@
   "username": "alex",
   "email": "alex@superbiz.com",
   "displayName": "Alex",
+  "roles": [
+    {
+      "displayName": "delete",
+      "name": "delete",
+      "id": "delete"
+    },
+    {
+      "displayName": "update",
+      "name": "update",
+      "id": "update"
+    },
+    {
+      "displayName": "create",
+      "name": "create",
+      "id": "create"
+    }
+  ],
   "credentials": {
     "password": {
       "active": true,

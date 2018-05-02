@@ -2,6 +2,13 @@
   "username": "nick",
   "email": "nick@superbiz.com",
   "displayName": "Nick",
+  "roles": [
+    {
+      "displayName": "delete",
+      "name": "delete",
+      "id": "delete"
+    }
+  ],
   "credentials": {
     "password": {
       "active": true,

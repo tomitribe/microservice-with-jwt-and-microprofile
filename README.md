@@ -8,6 +8,12 @@ Microprofile JWT example based on the Movie Fun app
 docker run -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
 ```
 
+If needed for debugging, add this to Docker run command
+
+```
+--network host
+```
+
 # Start the movie fun app
 
 It will create the additional data at startup

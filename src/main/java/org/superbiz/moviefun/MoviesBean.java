@@ -41,8 +41,9 @@ public class MoviesBean {
         return entityManager.find(Movie.class, id);
     }
 
-    public void addMovie(Movie movie) {
+    public Movie addMovie(Movie movie) {
         entityManager.persist(movie);
+        return movie;
     }
 
     public void editMovie(Movie movie) {
@@ -64,6 +65,7 @@ public class MoviesBean {
         }
         entityManager.persist(comment);
         movie.getComments().add(comment);
+        entityManager.merge(movie);
         return movie;
     }
 
@@ -74,6 +76,7 @@ public class MoviesBean {
         }
         movie.getComments().remove(comment);
         entityManager.remove(comment);
+        entityManager.merge(movie);
         return movie;
     }
 
