@@ -40,7 +40,7 @@
                         method: "POST",
                         url: window.ux.ROOT_URL + 'rest/movies/' + id + '/comment',
                         data: data,
-                        contentType: 'application/x-www-form-urlencoded',
+                        contentType: 'text/plain',
                         success:function(data) {
                             console.log(data);
                         },
