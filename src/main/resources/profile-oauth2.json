@@ -14,7 +14,7 @@
       "claimSourceType": "ACCOUNT",
       "source": "name",
       "type": "PRINCIPAL",
-      "target": "name"
+      "target": "username"
     },
     {
       "claimSourceType": "ACCOUNT",
@@ -25,12 +25,6 @@
     {
       "claimSourceType": "ACCOUNT",
       "source": "roles",
-      "type": "ROLE",
-      "target": "roles"
-    },
-    {
-      "claimSourceType": "ACCOUNT",
-      "source": "groups",
       "type": "ROLE",
       "target": "groups"
     },
