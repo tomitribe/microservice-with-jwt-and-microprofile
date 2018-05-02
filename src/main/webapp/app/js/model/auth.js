@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'lib/backbone', 'jwt_decode'];
-    define(deps, function (_, Backbone, jwtDecode) {
+    var deps = ['lib/underscore', 'lib/backbone', 'jwt_decode', 'lib/crypto'];
+    define(deps, function (_, Backbone, jwtDecode, CryptoJS) {
         var AuthModel = Backbone.Model.extend({
             urlRoot: window.tokenHost || (window.ux.ROOT_URL + 'rest/token'),
             defaults: {
@@ -29,7 +29,8 @@
                 email: '',
                 groups: '',
                 access_token: '',
-                token_type: ''
+                token_type: '',
+                gravatar: ''
             },
             initialize: function () {
                 var me = this;
@@ -62,7 +63,8 @@
                                 email: result['email'],
                                 groups: result['groups'],
                                 access_token: resp['access_token'],
-                                token_type: resp['token_type']
+                                token_type: resp['token_type'],
+                                gravatar: "https://www.gravatar.com/avatar/" + CryptoJS.MD5((result['email'] || '').trim()).toString() + "?s=90&d=retro"
                             });
                             res(me.get('auth'));
                         })
@@ -80,7 +82,8 @@
                         email: '',
                         groups: '',
                         access_token: '',
-                        token_type: ''
+                        token_type: '',
+                        gravatar: ''
                     });
                     res(!me.get('auth'));
                 });

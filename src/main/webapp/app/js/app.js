@@ -120,21 +120,28 @@
                         });
                     }
 
-                    $.ajax({
-                        url: window.ux.ROOT_URL + 'rest/movies/' + id,
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            var view = new MoviePageView({
-                                model: new MovieModel(data)
+                    auth.getAuth().then(
+                        function () {
+                            $.ajax({
+                                url: window.ux.ROOT_URL + 'rest/movies/' + id,
+                                method: 'GET',
+                                dataType: 'json',
+                                success: function (data) {
+                                    var view = new MoviePageView({
+                                        model: new MovieModel(data)
+                                    });
+                                    view.render();
+
+                                    containerView.showView(view);
+                                }
                             });
-                            view.render();
-
-                            containerView.showView(view);
                         }
-                    });
-
-
+                    ).catch( function () {
+                            router.navigate('login', {
+                                trigger: true
+                            });
+                        }
+                    )
                 },
                 showMain: function (page, fieldName, fieldValue) {
                     var me = this;
