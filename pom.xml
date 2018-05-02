@@ -139,6 +139,11 @@
       <artifactId>nimbus-jose-jwt</artifactId>
       <version>4.23</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
+      <version>0.13</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.tomee</groupId>

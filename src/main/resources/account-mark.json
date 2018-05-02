@@ -2,6 +2,13 @@
   "username": "mark",
   "email": "mark@superbiz.com",
   "displayName": "Mark",
+  "roles": [
+    {
+      "displayName": "update",
+      "name": "update",
+      "id": "update"
+    }
+  ],
   "credentials": {
     "password": {
       "active": true,

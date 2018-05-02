@@ -32,7 +32,7 @@ import java.util.Optional;
 @Dependent
 public class MoviesMPJWTConfigurationProvider {
 
-    public static final String ISSUED_BY = "https://server.example.com";
+    public static final String ISSUED_BY = "/oauth2/token";
 
     @Produces
     Optional<JWTAuthContextInfo> getOptionalContextInfo() throws Exception {

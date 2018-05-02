@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.ClaimValue;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.superbiz.moviefun.Comment;
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
 
@@ -41,6 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -112,14 +114,32 @@ public class MoviesResource {
         return movie;
     }
 
+    @POST
+    @Path("{id}/comment")
+    @Consumes("application/json")
+    public Movie addCommentToMovie(
+            @PathParam("id") final long id,
+            final String comment) {
+
+        if (jwtPrincipal == null) {
+            throw new WebApplicationException("Authentication required.", Response.Status.UNAUTHORIZED);
+        }
+        LOGGER.info("add comment to movie: " + toIdentityString());
+        return service.addCommentToMovie(id, new Comment() {{
+            setAuthor(username.getValue());
+            setComment(comment);
+            setEmail(email.getValue());
+            setTimestamp(new Date());
+        }});
+    }
+
     @PUT
     @Path("{id}")
     @Consumes("application/json")
     @RolesAllowed("update")
     public Movie editMovie(
             @PathParam("id") final long id,
-            Movie movie
-    ) {
+            Movie movie) {
         LOGGER.info("edit: " + toIdentityString());
         service.editMovie(movie);
         return movie;

@@ -1,6 +1,6 @@
 {
   "name": "movies",
-  "modRewrite": "RewriteCond %{REQUEST_METHOD} POST [OR]\nRewriteCond %{REQUEST_METHOD} PUT [OR]\nRewriteCond %{REQUEST_METHOD} DELETE\nRewriteRule \"^/movies(.*)$\" \"http://localhost:8181/rest/movies$1\" [P,A]\n\nRewriteRule \"^/movies(.*)$\" \"http://localhost:8181/rest/movies$1\" [P]",
+  "modRewrite": "RewriteCond %{REQUEST_METHOD} POST [OR]\nRewriteCond %{REQUEST_METHOD} PUT [OR]\nRewriteCond %{REQUEST_METHOD} DELETE\nRewriteRule \"^/movies(.*)$\" \"http://host.docker.internal:8181/rest/movies$1\" [P,auth]\n\nRewriteRule \"^/movies(.*)$\" \"http://host.docker.internal:8181/rest/movies$1\" [P]",
   "profileRequiresAll": true,
   "profiles": [
     {
