@@ -31,7 +31,7 @@
                 'submit .form-comment': function (evt) {
                     evt.preventDefault();
                     var me = this,
-                        data = $(evt.target).serialize(),
+                        data = $(evt.target).serializeArray().reduce(function(obj, item) { obj[item.name] = item.value; return obj; }, {}),
                         router = window.BackboneApp.getRouter(),
                         id = me.model.get('id');
                     console.log(id);
@@ -39,8 +39,8 @@
                     $.ajax({
                         method: "POST",
                         url: window.ux.ROOT_URL + 'rest/movies/' + id + '/comment',
-                        data: data,
-                        contentType: 'application/x-www-form-urlencoded',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
                         success:function(data) {
                             console.log(data);
                         },
