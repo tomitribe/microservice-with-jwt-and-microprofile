@@ -116,7 +116,7 @@ public class MoviesResource {
 
     @POST
     @Path("{id}/comment")
-    @Consumes("application/json")
+    @Consumes("text/plain")
     public Movie addCommentToMovie(
             @PathParam("id") final long id,
             final String comment) {
@@ -125,12 +125,14 @@ public class MoviesResource {
             throw new WebApplicationException("Authentication required.", Response.Status.UNAUTHORIZED);
         }
         LOGGER.info("add comment to movie: " + toIdentityString());
-        return service.addCommentToMovie(id, new Comment() {{
-            setAuthor(username.getValue());
-            setComment(comment);
-            setEmail(email.getValue());
-            setTimestamp(new Date());
-        }});
+
+        final Comment c = new Comment();
+        c.setAuthor(username.getValue());
+        c.setComment(comment);
+        c.setEmail(email.getValue());
+        c.setTimestamp(new Date());
+
+        return service.addCommentToMovie(id, c);
     }
 
     @PUT
