@@ -27,7 +27,7 @@
                 this.options = options || {};
             },
             tagName: 'ul',
-            className: 'pagination',
+            className: 'pagination col-9',
             count: 0,
             page: 1,
             events: {

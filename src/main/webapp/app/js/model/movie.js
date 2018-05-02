@@ -27,6 +27,7 @@
         return Backbone.Model.extend({
             urlRoot: window.ux.ROOT_URL + 'rest/movies',
             idAttribute: 'id',
+            newMovie: false,
             toJSON: function () {
                 if (!!this.attributes.rating && isString(this.attributes.rating)) {
                     this.attributes.rating = parseInt(this.attributes.rating, 10);

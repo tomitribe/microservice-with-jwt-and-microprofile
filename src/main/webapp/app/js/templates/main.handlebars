@@ -1,48 +1,53 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">{{i18n "movies"}}</h3>
-            </div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                            <span class="ux-selected-filter">{{i18n "title"}}</span>
-                        </button>
-                        <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuButton">
-                            <a href="title" class="dropdown-item ux-filter">{{i18n "title"}}</a>
-                            <a href="director" class="dropdown-item ux-filter">{{i18n "director"}}</a>
-                            <a href="genre" class="dropdown-item ux-filter">{{i18n "genre"}}</a>
-                            <a href="rating" class="dropdown-item ux-filter">{{i18n "rating"}}</a>
-                            <a href="year" class="dropdown-item ux-filter">{{i18n "year"}}</a>
+        <div class="mx-auto text-center mb-3 mt-3">
+            <h3 class="display-4">{{i18n "movies"}}</h3>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mx-auto">
+            <div class="card">
+                <div class="card-body px-0 py-0">
+                    <div class="input-group mb-0">
+                        <span class="input-group-prepend">
+                            <button class="btn btn-outline-primary ux-filter-action border-light" type="button">
+                                <span class="fa fa-search"></span>
+                            </button>
+                        </span>
+                        <input type="text" class="form-control ux-filter-field border-light" placeholder="Search for anything">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary dropdown-toggle border-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                                <span class="ux-selected-filter">{{i18n "title"}}</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuButton">
+                                <a href="title" class="dropdown-item ux-filter">{{i18n "title"}}</a>
+                                <a href="director" class="dropdown-item ux-filter">{{i18n "director"}}</a>
+                                <a href="genre" class="dropdown-item ux-filter">{{i18n "genre"}}</a>
+                                <a href="rating" class="dropdown-item ux-filter">{{i18n "rating"}}</a>
+                                <a href="year" class="dropdown-item ux-filter">{{i18n "year"}}</a>
+                            </div>
                         </div>
                     </div>
-                    <input type="text" class="form-control ux-filter-field">
-                    <span class="input-group-append">
-                        <button class="btn btn-outline-danger ux-clear-filter-action" type="button">
-                            <span class="fa fa-times-circle"></span>
-                        </button>
-                        <button class="btn btn-outline-primary ux-filter-action" type="button">
-                            <span class="fa fa-search"></span>
-                        </button>
-                    </span>
+                    <table class="table">
+                        <thead class="thead-gray">
+                            <tr>
+                                <th scope="col" class="font-weight-normal">{{i18n "title"}}</th>
+                                <th scope="col" class="font-weight-normal">{{i18n "director"}}</th>
+                                <th scope="col" class="font-weight-normal">{{i18n "genre"}}</th>
+                                <th scope="col" class="font-weight-normal">{{i18n "rating"}}</th>
+                                <th scope="col" class="font-weight-normal">{{i18n "year"}}</th>
+                                <th scope="col" class="font-weight-normal"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-gray"></tbody>
+                    </table>
                 </div>
-                <table class="table table-bordered table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">{{i18n "title"}}</th>
-                            <th scope="col">{{i18n "director"}}</th>
-                            <th scope="col">{{i18n "genre"}}</th>
-                            <th scope="col">{{i18n "rating"}}</th>
-                            <th scope="col">{{i18n "year"}}</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <button type="button" class="btn btn-primary ux-add-btn float-right">{{i18n "add.movie"}}</button>
             </div>
+        </div>
+        <div class="ux-additional mx-auto row mb-3 mt-3">
+            <button type="button" class="col-3 btn btn-primary ux-add-btn float-right">{{i18n "add.movie"}}</button>
         </div>
     </div>
 </div>

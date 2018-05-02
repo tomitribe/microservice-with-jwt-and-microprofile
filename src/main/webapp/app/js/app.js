@@ -103,7 +103,8 @@
                     'main': 'showMain',
                     'main/:page': 'showMain',
                     'main/:page/:field/:value': 'showMain',
-                    'login': 'showLogin'
+                    'login': 'showLogin',
+                    'movie/:id': 'showMovie'
                 },
                 showLogin: function () {
                     containerView.showView(loginView);
@@ -162,7 +163,8 @@
 
             function showMovieWindow(model, nw) {
                 var view = new MovieView({
-                    model: model
+                    model: model,
+                    newMovie: nw
                 });
                 view.render();
                 view.on('save-model', function (data) {

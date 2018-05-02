@@ -138,11 +138,11 @@
                 var me = this;
                 paginator.$el.detach();
                 me.loadDataLink.detach();
-                var table = $(me.$el.find('.table').get(0));
+                var uxAdditional = $(me.$el.find('.ux-additional').get(0));
                 if (count) {
-                    table.after(paginator.$el);
+                    uxAdditional.prepend(paginator.$el);
                 } else {
-                    table.after(me.loadDataLink);
+                    uxAdditional.prepend(me.loadDataLink);
                 }
             }
         });
