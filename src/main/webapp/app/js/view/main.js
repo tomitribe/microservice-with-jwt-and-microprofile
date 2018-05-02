@@ -37,7 +37,7 @@
                     var me = this;
                     var selected = $(me.$el.find('.ux-selected-filter').get(0));
                     var myLink = $(evt.target);
-                    me.filterOption = myLink.attr('href');
+                    me.filterOption = myLink.attr('data-option');
                     selected.html(i18n.get(me.filterOption, {}));
                 },
                 'click .ux-filter-action': function (evt) {
@@ -129,6 +129,9 @@
                     });
                     row.on('edit', function (data) {
                         me.trigger('edit', data);
+                    });
+                    row.on('movie', function (data) {
+                        me.trigger('movie', data);
                     });
                     tbody.append(row.render().$el);
                 });

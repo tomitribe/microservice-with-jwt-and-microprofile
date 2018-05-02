@@ -35,9 +35,9 @@
                     evt.preventDefault();
                     var me = this;
                     var myLink = $(evt.target);
-                    var href = myLink.attr('href');
+                    var page = myLink.attr('data-page');
                     me.trigger('go-to-page', {
-                        number: href
+                        number: page
                     });
                 }
             },

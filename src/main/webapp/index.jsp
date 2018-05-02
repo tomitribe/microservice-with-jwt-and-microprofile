@@ -29,8 +29,9 @@ limitations under the License.
     window.ux = window.ux || {};
     window.ux.SESSION_ID = "<%=request.getSession().getId()%>";
     window.ux.ROOT_URL = "<c:url value='/'/>".replace(';jsessionid=' + window.ux.SESSION_ID, '');
-    window.tokenHost = "http://localhost:8080/oauth2/token";
+    //window.tokenHost = "http://stage.dm:38080/oauth2/token";
   </script>
+  <base href="<c:url value='/'/>">
   <script src="<c:url value='/app/config.js'/>"></script>
   <script src="<c:url value='/app/js/start.js'/>"></script>
 </head>

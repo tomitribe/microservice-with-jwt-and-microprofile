@@ -25,6 +25,7 @@
         'app/js/view/main',
         'app/js/view/main-table-paginator',
         'app/js/view/movie',
+        'app/js/view/movie-page.view',
         'lib/underscore',
         'app/js/model/movies',
         'app/js/model/movie',
@@ -33,14 +34,15 @@
         'app/js/tools/alert.view',
         'lib/less', 'lib/backbone', 'lib/jquery', 'lib/bootstrap'
     ];
-    define(deps, function (containerView, loginView, mainView, paginator, MovieView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
+    define(deps, function (containerView, loginView, mainView, paginator, MovieView, MoviePageView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
         var auth = new AuthModel();
         window.auth = auth;
         var max = 5;
         var appState = {
             page: null,
             fieldName: null,
-            fieldValue: null
+            fieldValue: null,
+            movieId: null
         };
         containerView.render();
         var router = null;
@@ -109,6 +111,31 @@
                 showLogin: function () {
                     containerView.showView(loginView);
                 },
+                showMovie: function (id) {
+                    var me = this;
+                    //appState.movieId = id;
+                    if (!id) {
+                        return me.navigate('main/1', {
+                            trigger: true
+                        });
+                    }
+
+                    $.ajax({
+                        url: window.ux.ROOT_URL + 'rest/movies/' + id,
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var view = new MoviePageView({
+                                model: new MovieModel(data)
+                            });
+                            view.render();
+
+                            containerView.showView(view);
+                        }
+                    });
+
+
+                },
                 showMain: function (page, fieldName, fieldValue) {
                     var me = this;
                     appState.page = page;
@@ -163,8 +190,7 @@
 
             function showMovieWindow(model, nw) {
                 var view = new MovieView({
-                    model: model,
-                    newMovie: nw
+                    model: model
                 });
                 view.render();
                 view.on('save-model', function (data) {
@@ -188,6 +214,13 @@
 
             mainView.on('edit', function (data) {
                 showMovieWindow(data.model);
+            });
+
+
+            mainView.on('movie', function (data) {
+                router.navigate('movie/' + data.model.id, {
+                    trigger: true
+                });
             });
 
             mainView.on('filter', function (data) {
