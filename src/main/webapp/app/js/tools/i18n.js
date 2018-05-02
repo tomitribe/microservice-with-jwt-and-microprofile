@@ -22,7 +22,7 @@ define(['lib/underscore', 'lib/handlebars', 'app/js/tools/log'], function (_, Ha
 
     var missing = Handlebars.compile('[!{{key}}!]');
     var messages = {
-        'application.name': 'Moviefun',
+        'application.name': 'MovieChat',
         'load.dada': 'Click here to load sample data',
         'movies': 'Movies',
         'title': 'Title',

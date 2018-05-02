@@ -27,6 +27,7 @@
         'main-table-paginator-button',
         'load-data-link',
         'movie',
+        'movie-page',
         'alert'
     ];
 

@@ -41,6 +41,13 @@
                     me.trigger('edit', {
                         model: me.model
                     });
+                },
+                'click .ux-goto-movie': function (evt) {
+                    evt.preventDefault();
+                    var me = this;
+                    me.trigger('movie', {
+                        model: me.model
+                    });
                 }
             },
 

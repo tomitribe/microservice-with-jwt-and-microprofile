@@ -1,8 +1,11 @@
-<td><a href="edit" class="ux-edit-row">{{title}}</a></td>
+<td><a href="movie/{{id}}" class="ux-goto-movie font-weight-bold">{{title}}</a></td>
 <td>{{director}}</td>
 <td>{{genre}}</td>
-<td>{{rating}}</td>
+<td><i class="fa fa-star text-warning"></i> {{rating}}/10</td>
 <td>{{year}}</td>
 <td>
-    <a href="delete" class="ux-delete-row"><span class="fa fa-trash-alt"></span></a>
+    <div class="btn-group">
+        <button href="edit" class="ux-edit-row btn btn-outline-info"><span class="fa fa-edit"></span></button>
+        <button href="delete" class="ux-delete-row btn btn-outline-danger"><span class="fa fa-trash-alt"></span></button>
+    </div>
 </td>

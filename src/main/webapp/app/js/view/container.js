@@ -44,6 +44,7 @@
             },
             showView: function (view) {
                 var me = this;
+                me.$el.attr('current-view', view.className);
                 var contentArea = me.$('.ux-content-area');
                 if (me.currentView) {
                     me.currentView.$el.detach();
