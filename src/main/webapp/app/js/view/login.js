@@ -34,7 +34,7 @@
                     var me = this,
                         creds = $(evt.target).serialize(),
                         router = window.BackboneApp.getRouter();
-                    window.auth.login(creds).then(
+                    window.ux.auth.login(creds).then(
                         function () {
                             router.navigate('main/1', {
                                 trigger: true
