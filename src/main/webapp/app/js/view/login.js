@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'app/js/tools/i18n', 'lib/backbone', 'app/js/tools/alert.view'];
+    var deps = ['app/js/templates', 'lib/underscore', 'app/js/tools/i18n', 'backbone', 'app/js/tools/alert.view'];
     define(deps, function (templates, underscore, i18n, Backbone, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){

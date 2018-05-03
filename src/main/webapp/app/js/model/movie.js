@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/backbone'];
+    var deps = ['backbone'];
     define(deps, function () {
         var isString = function (obj) {
             return Object.prototype.toString.call(obj) === '[object String]';
