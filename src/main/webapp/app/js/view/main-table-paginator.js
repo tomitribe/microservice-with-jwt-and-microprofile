@@ -58,7 +58,7 @@
                     }));
                 }
                 me.$el.append(templates.getValue('main-table-paginator-button', {
-                    pageNumber: 'last',
+                    pageNumber: me.count.toString(),
                     pageText: '>>'
                 }));
                 return this;

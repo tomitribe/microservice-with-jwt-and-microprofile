@@ -35,7 +35,8 @@
         'lib/less', 'backbone', 'lib/jquery', 'lib/bootstrap'
     ];
     define(deps, function (containerView, loginView, mainView, paginator, MovieView, MoviePageView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
-        var auth = new AuthModel();
+        var auth = new AuthModel({id: 'ux.auth'});
+        auth.fetch();
         window.ux.auth = auth;
         var max = 5;
         var appState = {
@@ -102,14 +103,25 @@
             var Router = Backbone.Router.extend({
                 routes: {
                     '': 'showMain',
-                    'main': 'showMain',
-                    'main/:page': 'showMain',
+                    'main(/:page)': 'showMain',
                     'main/:page/:field/:value': 'showMain',
-                    'login': 'showLogin',
+                    'login(/:tail)': 'showLogin',
+                    'logout(/:tail)': 'showLogout',
                     'movie/:id': 'showMovie'
                 },
                 showLogin: function () {
                     containerView.showView(loginView);
+                },
+                showLogout: function () {
+                    window.ux.auth.logout()
+                        .then(
+                            function () {
+                                router.navigate('login', {
+                                    trigger: true
+                                });
+                                AlertView.show('Success', 'logged out', 'success');
+                            }
+                        )
                 },
                 showMovie: function (id) {
                     var me = this;
@@ -132,7 +144,10 @@
                                     });
                                     view.render();
                                     view.on('edit', function (data) {
-                                        showMovieWindow(data.model);
+                                        showMovieWindow(data.model)
+                                            .then(function() {
+                                                view.render();
+                                            });
                                     });
 
                                     containerView.showView(view);
@@ -199,31 +214,41 @@
             });
 
             function showMovieWindow(model, nw) {
-                var view = new MovieView({
-                    model: model
-                });
-                view.render();
-                view.on('save-model', function (data) {
-                    data.model.save({}, {
-                        success: function () {
-                            view.remove();
-                            loadPage(appState.page, appState.fieldName, appState.fieldValue);
-                        },
-                        error: function () {
-                            AlertView.show('Failed', 'Failed to ' + (nw ? 'create' : 'update') + ' movie (forbidden)', 'danger');
-                        }
+                return new Promise(function(res, rej) {
+                    var view = new MovieView({
+                        model: model
                     });
+                    view.render();
+                    view.on('save-model', function (data) {
+                        data.model.save({}, {
+                            success: function () {
+                                view.remove();
+                                res();
+                            },
+                            error: function () {
+                                AlertView.show('Failed', 'Failed to ' + (nw ? 'create' : 'update') + ' movie (forbidden)', 'danger');
+                                rej();
+                            }
+                        });
+                    });
+                    $('body').append(view.$el);
+                    view.$el.modal({});
+
                 });
-                $('body').append(view.$el);
-                view.$el.modal({});
             }
 
             mainView.on('add', function () {
-                showMovieWindow(new MovieModel({}), true);
+                showMovieWindow(new MovieModel({}), true)
+                    .then(function() {
+                        loadPage(appState.page, appState.fieldName, appState.fieldValue);
+                    });
             });
 
             mainView.on('edit', function (data) {
-                showMovieWindow(data.model);
+                showMovieWindow(data.model)
+                    .then(function() {
+                        loadPage(appState.page, appState.fieldName, appState.fieldValue);
+                    });
             });
 
             mainView.on('movie', function (data) {
@@ -246,9 +271,6 @@
 
             paginator.on('go-to-page', function (data) {
                 var page = data.number;
-                if (page === 'last') {
-                    page = paginator.getCount();
-                }
                 router.showMain(page, appState.fieldName, appState.fieldValue);
             });
 

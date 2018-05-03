@@ -35,21 +35,26 @@ define(['lib/handlebars', 'lib/moment'], function (Handlebars, moment) {
     }
 
     function java2jsDate(dateStr) {
-        return moment(dateStr, "YYYYMMDDHHmmssZZ").toString()
+        return moment(dateStr, "YYYYMMDDHHmmssZZ").valueOf();
     }
 
+    function java2jsString(dateStr) {
+        return moment(dateStr, "YYYYMMDDHHmmssZZ").toString();
+    }
 
     function java2jsISO(dateStr) {
-        return moment(dateStr, "YYYYMMDDHHmmssZZ").toISOString()
+        return moment(dateStr, "YYYYMMDDHHmmssZZ").toISOString();
     }
 
     Handlebars.registerHelper("formatTime", formatTime);
+    Handlebars.registerHelper("java2jsString", java2jsString);
+    Handlebars.registerHelper("java2jsISO", java2jsISO);
     Handlebars.registerHelper("java2jsDate", java2jsDate);
-    Handlebars.registerHelper("java2jsISO", java2jsDate);
 
     return {
         formatTime: formatTime,
-        java2jsDate: java2jsDate,
+        java2jsString: java2jsString,
         java2jsISO: java2jsISO,
+        java2jsDate: java2jsDate
     };
 });

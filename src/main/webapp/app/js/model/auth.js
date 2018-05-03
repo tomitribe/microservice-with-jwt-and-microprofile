@@ -39,7 +39,6 @@
             initialize: function () {
                 var me = this;
                 me.loginModel = new LoginModel();
-                me.fetch();
                 $.ajaxSetup({
                     beforeSend: function ( jqXHR ) {
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
@@ -79,8 +78,6 @@
             logout: function() {
                 var me = this;
                 return new Promise( function (res, rej) {
-                    me.clear();
-                    me.id = null;
                     me.set({
                         auth: false,
                         username: '',
