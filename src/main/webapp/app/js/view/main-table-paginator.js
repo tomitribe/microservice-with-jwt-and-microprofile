@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/backbone'];
+    var deps = ['app/js/templates', 'backbone'];
     define(deps, function (templates) {
 
         var View = Backbone.View.extend({

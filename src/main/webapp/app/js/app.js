@@ -32,7 +32,7 @@
         'app/js/model/auth',
         'app/js/tools/i18n',
         'app/js/tools/alert.view',
-        'lib/less', 'lib/backbone', 'lib/jquery', 'lib/bootstrap'
+        'lib/less', 'backbone', 'lib/jquery', 'lib/bootstrap'
     ];
     define(deps, function (containerView, loginView, mainView, paginator, MovieView, MoviePageView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
         var auth = new AuthModel();

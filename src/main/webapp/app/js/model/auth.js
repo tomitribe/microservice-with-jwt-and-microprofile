@@ -19,21 +19,27 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'lib/backbone', 'jwt_decode', 'lib/crypto'];
-    define(deps, function (_, Backbone, jwtDecode, CryptoJS) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/backbone-localstorage'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel) {
         var AuthModel = Backbone.Model.extend({
-            urlRoot: window.tokenHost || (window.ux.ROOT_URL + 'rest/token'),
+            id: 'ux.auth',
+            localStorage: new Store('ux.auth'),
             defaults: {
                 auth: false,
                 username: '',
                 email: '',
                 groups: '',
+
                 access_token: '',
                 token_type: '',
-                gravatar: ''
+                expires_in: '',
+                refresh_token: ''
             },
+            loginModel: null,
             initialize: function () {
                 var me = this;
+                me.loginModel = new LoginModel();
+                me.fetch();
                 $.ajaxSetup({
                     beforeSend: function ( jqXHR ) {
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
@@ -46,29 +52,28 @@
             login: function(creds) {
                 var me = this;
                 return new Promise( function (res, rej) {
-                    if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
-                    $.ajax({
-                        method: "POST",
-                        url: me.urlRoot,
-                        data: creds,
-                        contentType: 'application/x-www-form-urlencoded'
+                    me.logout().then( function () {
+                        me.loginModel.getAccess(creds)
+                            .then(function (resp) {
+                                var result = jwtDecode(resp['access_token']);
+                                if (!resp || !resp['access_token'] || !result) return rej(resp);
+                                me.set({
+                                    auth: true,
+                                    username: result['username'],
+                                    email: result['email'],
+                                    groups: result['groups'],
+
+                                    access_token: resp['access_token'],
+                                    token_type: resp['token_type'],
+                                    expires_in: resp['expires_in'],
+                                    refresh_token: resp['refresh_token']
+                                });
+
+                                me.save();
+                                res(me.get('auth'));
+                            })
+                            .catch(rej);
                     })
-                    .done(
-                        function (resp) {
-                            var result = jwtDecode(resp['access_token']);
-                            if (!resp || !resp['access_token'] || !result) return rej(resp);
-                            me.set({
-                                auth: true,
-                                username: result['username'],
-                                email: result['email'],
-                                groups: result['groups'],
-                                access_token: resp['access_token'],
-                                token_type: resp['token_type'],
-                                gravatar: "https://www.gravatar.com/avatar/" + CryptoJS.MD5((result['email'] || '').trim()).toString() + "?s=90&d=retro"
-                            });
-                            res(me.get('auth'));
-                        })
-                    .fail(rej);
                 });
             },
             logout: function() {
@@ -81,26 +86,20 @@
                         username: '',
                         email: '',
                         groups: '',
+
                         access_token: '',
                         token_type: '',
-                        gravatar: ''
+                        expires_in: '',
+                        refresh_token: ''
                     });
+
+                    me.save();
                     res(!me.get('auth'));
                 });
             },
             getAuth: function() {
                 var me = this;
                 return new Promise(function(res, rej) {
-                    /*this.fetch({
-                        success: function(model, resp) {
-                            res();
-                        },
-                        error: function() {
-                            me.logout();
-                            rej();
-                        }
-                    });*/
-                    // TODO: finish AUTH from token;
                     me.get('auth') ? res() : rej();
                 })
             }

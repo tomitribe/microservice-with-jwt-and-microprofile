@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'app/js/tools/i18n', 'lib/backbone'];
+    var deps = ['app/js/templates', 'lib/underscore', 'app/js/tools/i18n', 'backbone'];
     define(deps, function (templates, _, i18n, Backbone) {
         var AlertView = Backbone.View.extend({
             tagName: "div",

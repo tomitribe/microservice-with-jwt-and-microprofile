@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/tools/alert.view', 'app/js/tools/date'];
+    var deps = ['app/js/templates', 'lib/underscore', 'backbone', 'app/js/tools/alert.view', 'app/js/tools/date', 'app/js/tools/gravatar'];
     define(deps, function (templates, _, Backbone, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){
@@ -75,7 +75,7 @@
                     year: me.model.get('year'),
                     comments: me.model.get('comments'),
                     id: me.model.get('id'),
-                    gravatar: window.ux.auth.get('gravatar'),
+                    email: window.ux.auth.get('email'),
                     author: window.ux.auth.get('username'),
                     currentYear: new Date().getFullYear()
                 }));
