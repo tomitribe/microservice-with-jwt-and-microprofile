@@ -20,7 +20,7 @@
     'use strict';
 
     var deps = ['app/js/templates', 'lib/underscore', 'backbone', 'app/js/tools/alert.view', 'app/js/tools/date', 'app/js/tools/gravatar'];
-    define(deps, function (templates, _, Backbone, AlertView) {
+    define(deps, function (templates, _, Backbone, AlertView, DateHelper) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
@@ -73,7 +73,9 @@
                     genre: me.model.get('genre'),
                     rating: me.model.get('rating'),
                     year: me.model.get('year'),
-                    comments: me.model.get('comments'),
+                    comments: me.model.get('comments').sort(function(a, b){
+                        return DateHelper.java2jsDate(a.timestamp) - DateHelper.java2jsDate(b.timestamp);
+                    }),
                     id: me.model.get('id'),
                     email: window.ux.auth.get('email'),
                     author: window.ux.auth.get('username'),
