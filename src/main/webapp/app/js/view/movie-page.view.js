@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/tools/alert.view'];
+    var deps = ['app/js/templates', 'lib/underscore', 'lib/backbone', 'app/js/tools/alert.view', 'app/js/tools/date'];
     define(deps, function (templates, _, Backbone, AlertView) {
         var View = Backbone.View.extend({
             initialize: function(options){
@@ -28,21 +28,35 @@
             tagName: 'div',
             className: 'ux-movie-page',
             events: {
+                'click .ux-delete-movie': function (evt) {
+                    evt.preventDefault();
+                    var me = this;
+                    me.trigger('delete', {
+                        model: me.model
+                    });
+                },
+                'click .ux-edit-movie': function (evt) {
+                    evt.preventDefault();
+                    var me = this;
+                    me.trigger('edit', {
+                        model: me.model
+                    });
+                },
                 'submit .form-comment': function (evt) {
                     evt.preventDefault();
                     var me = this,
-                        data = $(evt.target).serialize(),
+                        data = evt.target.comment.value,
                         router = window.BackboneApp.getRouter(),
                         id = me.model.get('id');
-                    console.log(id);
                     if(!id) return ;
                     $.ajax({
                         method: "POST",
                         url: window.ux.ROOT_URL + 'rest/movies/' + id + '/comment',
                         data: data,
                         contentType: 'text/plain',
-                        success:function(data) {
-                            console.log(data);
+                        success:function(model) {
+                            me.model.set(model);
+                            me.render();
                         },
                         error: function(e) {
                             AlertView.show('Failed', 'Failed to comment (' + e.status + ')', 'danger');
@@ -61,6 +75,8 @@
                     year: me.model.get('year'),
                     comments: me.model.get('comments'),
                     id: me.model.get('id'),
+                    gravatar: window.ux.auth.get('gravatar'),
+                    author: window.ux.auth.get('username'),
                     currentYear: new Date().getFullYear()
                 }));
                 return me;

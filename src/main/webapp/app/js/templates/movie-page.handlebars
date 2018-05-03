@@ -1,7 +1,11 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="mx-auto mb-3 mt-3">
-            <h5 class="display-5">{{title}} ({{year}})</h5>
+        <div class="mx-auto mb-1 mt-4 d-flex  align-items-end justify-content-between">
+            <h2 class="font-weight-light mb-1">{{title}} ({{year}})</h2>
+            <div class="btn-group">
+                <button href="edit" class="ux-edit-movie btn btn-outline-info"><span class="fa fa-edit"></span></button>
+            </div>
+            <button href="delete" class="ux-delete-row btn btn-outline-danger" hidden><span class="fa fa-trash-alt"></span></button>
         </div>
     </div>
 </div>
@@ -9,9 +13,9 @@
     <div class="col-md-12">
         <div class="mx-auto">
             <div class="card">
-                <div class="card-body px-1 py-1">
-                    <div class="container">
-                        <div class="row">
+                <div class="card-body px-0 py-0">
+                    <div class="container px-5 py-4">
+                        <div class="row my-3">
                             <div class="col m-1">
                                 <div class="text-muted">TITLE</div>
                                 <div>{{title}}</div>
@@ -36,7 +40,9 @@
                             </div>
                             <div class="col"></div>
                         </div>
-                        <hr/>
+                    </div>
+                    <hr/>
+                    <div class="container px-5 py-4">
                         <div class="row">
                             <div class="col">
                                 <div class="ux-comments">
@@ -45,12 +51,15 @@
                                         <div class="row comment-mock comment-{{this.id}}">
                                             <div class="col">
                                                 <div class="mt-3 g-mb-30 media-comment d-flex">
-                                                    <img class="rounded-circle mr-3" src="{{this.email}}"
-                                                         alt="Image Description" height="50" width="50">
+                                                    <img class="rounded-circle mr-3"
+                                                         src="https://www.gravatar.com/avatar/{{this.gravatar}}?s=50"
+                                                         height="50" width="50">
                                                     <div class="media-body">
                                                         <div class="d-flex">
                                                             <h5 class="h5 mb-0">{{this.author}}</h5>
-                                                            <span class="">{{this.timestamp}}</span>
+                                                            <a title="{{java2jsDate this.timestamp}}"><span
+                                                                    class="ml-2 text-muted text-lowercase">{{formatTime
+                                                                    this.timestamp}}</span></a>
                                                         </div>
                                                         <p>{{this.comment}}</p>
                                                     </div>
@@ -62,12 +71,16 @@
                                         <div class="col">
                                             <div class="mt-3 g-mb-30 media-comment d-flex">
                                                 <a title="{{this.author}}">
-                                                    <img class="ux-avatar rounded-circle mr-3" src="" height="50" width="50">
+                                                    <img class="ux-avatar rounded-circle mr-3"
+                                                         src="{{this.gravatar}}" height="50" width="50">
                                                 </a>
                                                 <div class="media-body">
                                                     <form class="form-comment">
-                                                        <textarea class="form-control" placeholder="Message..." name="comment"></textarea>
-                                                        <button class="btn float-right btn-primary my-3 ux-send-comment" type="submit">Comment</button>
+                                                            <textarea class="form-control" placeholder="Message..."
+                                                                      name="comment"></textarea>
+                                                        <button class="btn float-right btn-primary my-3 ux-send-comment"
+                                                                type="submit">Comment
+                                                        </button>
                                                     </form>
                                                 </div>
                                             </div>

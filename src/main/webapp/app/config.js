@@ -28,7 +28,8 @@ var APP_CONFIG = {
         'lib/json2': 'webjars/json2/20140204/json2.min',
         'lib/backbone': 'webjars/backbonejs/1.3.3/backbone',
         'jwt_decode': 'webjars/jwt-decode/2.2.0/build/jwt-decode.min',
-        'lib/crypto': 'webjars/crypto-js/3.1.9-1/crypto-js'
+        'lib/crypto': 'webjars/crypto-js/3.1.9-1/crypto-js',
+        'lib/moment': 'webjars/momentjs/2.22.1/moment'
     },
     shim: {
         'lib/bootstrap': {

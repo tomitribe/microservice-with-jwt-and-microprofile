@@ -31,7 +31,7 @@
                     evt.preventDefault();
                     var me = this,
                         router = window.BackboneApp.getRouter();
-                    window.auth.logout()
+                    window.ux.auth.logout()
                         .then(
                             function () {
                                 router.navigate('login', {
@@ -53,10 +53,10 @@
                 me.currentView.render();
                 contentArea.append(me.currentView.el);
 
-                var access = window.auth.getAuth().then(
+                var access = window.ux.auth.getAuth().then(
                     function (value) {
-                        me.$('.ux-logout').attr("title", window.auth.get('username'));
-                        me.$('.ux-avatar').attr("src", window.auth.get('gravatar'));
+                        me.$('.ux-logout').attr("title", window.ux.auth.get('username'));
+                        me.$('.ux-avatar').attr("src", window.ux.auth.get('gravatar'));
                         me.$('.ux-logout').show("fast");
                     }
                 ).catch(
@@ -84,7 +84,7 @@
                     return this;
                 }
                 var html = templates.getValue('container', {
-                    userName: window.auth.get('username')
+                    userName: window.ux.auth.get('username')
                 });
                 this.$el.html(html);
 

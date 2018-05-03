@@ -36,7 +36,7 @@
     ];
     define(deps, function (containerView, loginView, mainView, paginator, MovieView, MoviePageView, underscore, moviesList, MovieModel, AuthModel, i18n, AlertView) {
         var auth = new AuthModel();
-        window.auth = auth;
+        window.ux.auth = auth;
         var max = 5;
         var appState = {
             page: null,
@@ -131,6 +131,9 @@
                                         model: new MovieModel(data)
                                     });
                                     view.render();
+                                    view.on('edit', function (data) {
+                                        showMovieWindow(data.model);
+                                    });
 
                                     containerView.showView(view);
                                 }
@@ -222,7 +225,6 @@
             mainView.on('edit', function (data) {
                 showMovieWindow(data.model);
             });
-
 
             mainView.on('movie', function (data) {
                 router.navigate('movie/' + data.model.id, {
