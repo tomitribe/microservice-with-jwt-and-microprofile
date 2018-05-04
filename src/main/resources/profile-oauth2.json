@@ -35,8 +35,9 @@
       "target": "sub"
     },
     {
-      "claimSourceType": "ACCOUNT",
-      "source": "email",
+      "claimSourceType": "HTTP",
+      "claimSourceRef": "movies-claims-source",
+      "source": "audience",
       "type": "CLAIM",
       "target": "aud"
     }

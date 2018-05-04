@@ -1,0 +1,12 @@
+{
+  "type": "HTTP",
+  "name": "Movies claims source",
+  "configuration": {
+    "path": "/moviefun/rest/claims"
+  },
+  "connectionRef": {
+    "id": "movie-api-connection",
+    "name": "Movie API Connection",
+    "displayName": "Movie API Connection"
+  }
+}

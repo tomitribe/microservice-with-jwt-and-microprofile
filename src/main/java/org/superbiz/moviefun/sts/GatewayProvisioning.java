@@ -30,6 +30,7 @@ import javax.json.JsonReader;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +63,45 @@ public class GatewayProvisioning {
         account("nick");
 
         route();
+
+        api();
+        claim();
+    }
+
+    private void claim() throws IOException {
+        final URL resource = GatewayProvisioning.class.getClassLoader().getResource("api-claim.json");
+        final JsonReader reader = Json.createReader(resource.openStream());
+        final JsonObject object = reader.readObject();
+
+        webClient.reset()
+                .path("/claim/source/movies-claims-source")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .delete();
+
+        webClient.reset()
+                .path("/claim/source/")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(object);
+    }
+
+    private void api() throws IOException {
+        final URL resource = GatewayProvisioning.class.getClassLoader().getResource("api.json");
+        final JsonReader reader = Json.createReader(resource.openStream());
+        final JsonObject object = reader.readObject();
+
+        webClient.reset()
+                .path("/http/movie-api-connection")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .delete();
+
+        webClient.reset()
+                .path("/http/")
+                .header(HttpHeaders.AUTHORIZATION, generateBasicAuth())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(object);
     }
 
     private void waitForTag(final int count) throws Exception {
