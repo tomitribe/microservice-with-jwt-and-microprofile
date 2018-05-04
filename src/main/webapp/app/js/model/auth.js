@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -43,12 +43,43 @@
             initialize: function () {
                 var me = this;
                 me.loginModel = new LoginModel();
+                var ref = _.throttle( function() {
+                    if(me.refreshTimeout = null) me.refreshRunner();
+                }, 5000);
                 $.ajaxSetup({
                     beforeSend: function ( jqXHR ) {
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
                         }
+                        const now = moment().valueOf(),
+                                access_exp = me.get('access_exp'),
+                                refresh_exp = me.get('refresh_exp'),
+                                router = window.BackboneApp.getRouter(),
+                                left = (access_exp - now),
+                                leftRe = (refresh_exp - now);
+
+                        if ( !refresh_exp || leftRe < 0 ) {
+                            me.logout().then(
+                                function () {
+                                    router.navigate('login', {
+                                        trigger: true
+                                    });
+                                    AlertView.show('Warning', 'Access expired by refresh timeout, logged out.', 'warning');
+                                }
+                            );
+                            jqXHR.abort();
+                        } else if ( !access_exp || left < 0 ) {
+                            me.logout().then(
+                                function () {
+                                    router.navigate('login', {
+                                        trigger: true
+                                    });
+                                    AlertView.show('Warning', 'Access expired by inactivity timeout, logged out.', 'warning');
+                                }
+                            );
+                            jqXHR.abort();
+                        } else { ref(); }
                     }
                 });
             },
@@ -80,7 +111,6 @@
                     me.loginModel.getRefresh(rt)
                         .then(function (resp) {
                             me.parseResp(resp);
-                            me.save();
                             me.getAuth().then(res).catch(rej);
                         })
                         .catch(rej);
@@ -91,6 +121,8 @@
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
                 if (resp && resp['access_token'] && access_token) {
+                    const access_exp = moment.unix(access_token.exp).valueOf(),
+                        refresh_exp = moment.unix(refresh_token.exp).valueOf();
                     me.set({
                         auth: true,
                         username: access_token['username'],
@@ -98,13 +130,13 @@
                         groups: access_token['groups'],
 
                         access_token: resp['access_token'],
-                        access_exp: moment.unix(access_token.exp).valueOf(),
+                        access_exp: access_exp,
 
                         token_type: resp['token_type'],
                         expires_in: resp['expires_in'],
 
                         refresh_token: resp['refresh_token'],
-                        refresh_exp: moment.unix(refresh_token.exp).valueOf()
+                        refresh_exp: refresh_exp
                     });
                 } else {
                     me.set({
@@ -123,6 +155,27 @@
                         refresh_exp: ''
                     });
                 }
+            },
+            refreshTimeout: null,
+            refreshRunner: function(timeout) {
+                var me = this;
+                me.refreshTimeout && clearTimeout(me.refreshTimeout);
+                me.getAuth().then( function () {
+                    me.refreshTimeout = setTimeout(function(){
+                        const now = moment().valueOf(),
+                            access_exp = me.get('access_exp'),
+                            left = (access_exp - now),
+                            min = 60 * 1000;
+                        if (left > 12 * min) {
+                            // Uncomment if inactivity checker is not needed
+                            //me.refreshRunner(10 * min);
+                        } else if (left > 4 * min) {
+                            me.refreshRunner(left - 2 * min);
+                        } else {
+                            me.refresh();
+                        }
+                    }, timeout);
+                });
             },
             getAuth: function() {
                 var me = this;
