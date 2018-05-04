@@ -25,22 +25,31 @@ import javax.ejb.EJB;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Path("load")
 public class LoadDataResource {
+
     @EJB
     private MoviesBean moviesBean;
 
     @POST
     public void load() {
-        addComments(moviesBean.addMovie(new Movie("Wedding Crashers", "David Dobkin", "Comedy", 7, 2005)), 5);
-        addComments(moviesBean.addMovie(new Movie("Starsky & Hutch", "Todd Phillips", "Action", 6, 2004)), 6);
-        addComments(moviesBean.addMovie(new Movie("Shanghai Knights", "David Dobkin", "Action", 6, 2003)), 4);
-        addComments(moviesBean.addMovie(new Movie("I-Spy", "Betty Thomas", "Adventure", 5, 2002)), 9);
-        addComments(moviesBean.addMovie(new Movie("The Royal Tenenbaums", "Wes Anderson", "Comedy", 8, 2001)), 2);
-        addComments(moviesBean.addMovie(new Movie("Zoolander", "Ben Stiller", "Comedy", 6, 2001)), 1);
-        moviesBean.addMovie(new Movie("Shanghai Noon", "Tom Dey", "Comedy", 7, 2000));
+        final Faker faker = new Faker(Locale.ENGLISH);
+        final Random random = new Random(System.nanoTime());
+
+        for (int i = 0 ; i < (5 + random.nextInt(20)) ; i++) {
+            addComments(
+                    moviesBean.addMovie(
+                            new Movie(
+                                    faker.book().title(),
+                                    faker.book().author(),
+                                    faker.book().genre(),
+                                    random.nextInt(10),
+                                    faker.date().past(1000, TimeUnit.DAYS).getYear())),random.nextInt(100));
+        }
+
     }
 
     private void addComments(final Movie movie, final int nbComments) {
