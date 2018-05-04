@@ -39,7 +39,7 @@ public class LoadDataResource {
         final Faker faker = new Faker(Locale.ENGLISH);
         final Random random = new Random(System.nanoTime());
 
-        for (int i = 0 ; i < random.nextInt(20) ; i++) {
+        for (int i = 0 ; i < (5 + random.nextInt(20)) ; i++) {
             addComments(
                     moviesBean.addMovie(
                             new Movie(
