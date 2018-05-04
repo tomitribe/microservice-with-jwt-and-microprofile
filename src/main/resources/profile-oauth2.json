@@ -4,6 +4,8 @@
   "name": "movies",
   "refreshAllowed": true,
   "requiresClient": false,
+  "accessTokenExpireTTL": "30 seconds",
+  "refreshTokenExpireTTL": "1 minute",
   "allowedGrants": [
     "password",
     "client_credentials",

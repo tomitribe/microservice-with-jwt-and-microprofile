@@ -24,6 +24,7 @@ import org.superbiz.moviefun.MoviesBean;
 import javax.ejb.EJB;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import java.time.temporal.TemporalField;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +48,7 @@ public class LoadDataResource {
                                     faker.book().author(),
                                     faker.book().genre(),
                                     random.nextInt(10),
-                                    faker.date().past(1000, TimeUnit.DAYS).getYear())),random.nextInt(100));
+                                    1960 + random.nextInt(50))),random.nextInt(100));
         }
 
     }
