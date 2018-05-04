@@ -42,7 +42,7 @@
                         }
                     ).catch(
                         function (e) {
-                            AlertView.show('Failed', e['responseJSON']['error_description'], 'danger');
+                            AlertView.show('Failed', e['responseJSON'] && e['responseJSON']['error_description'] || e, 'danger');
                         }
                     );
                 }

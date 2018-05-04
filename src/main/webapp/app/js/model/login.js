@@ -26,13 +26,15 @@
             initialize: function () {
             },
             getAccess: function(creds) {
-                console.log(creds);
                 var me = this;
                 return new Promise( function (res, rej) {
                     if(!creds || !creds.length) return rej({'responseJSON':{'error_description': 'Credentials are required'}});
                     $.ajax({
                         method: "POST",
                         url: me.urlRoot,
+                        beforeSend: function() {
+                        },
+                        global: false,
                         data: creds,
                         contentType: 'application/x-www-form-urlencoded'
                     })
@@ -47,9 +49,12 @@
                     $.ajax({
                         method: "POST",
                         url: me.urlRoot,
+                        beforeSend: function() {
+                        },
+                        global: false,
                         data: $.param({
                             refresh_token: token,
-                            type: 'oauth2',
+                            //type: 'oauth2',
                             grant_type: 'refresh_token'
                         }),
                         contentType: 'application/x-www-form-urlencoded'
