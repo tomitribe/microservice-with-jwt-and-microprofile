@@ -48,6 +48,7 @@ public class MoviesMPJWTConfigurationProvider {
         final RSAPublicKey pk = (RSAPublicKey) kf.generatePublic(spec);
 
         contextInfo.setSignerKey(pk);
+        contextInfo.setExpGracePeriodSecs(300);
 
         return Optional.of(contextInfo);
     }

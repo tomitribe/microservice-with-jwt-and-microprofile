@@ -1,0 +1,15 @@
+{
+  "displayName": null,
+  "description": null,
+  "tags": [],
+  "pool": {
+    "enabledProtocols": [
+      "ALL"
+    ],
+    "enabledCipherSuites": [
+      "ALL"
+    ]
+  },
+  "name": "Movie API Connection",
+  "endpoint": "http://host.docker.internal:8181"
+}
