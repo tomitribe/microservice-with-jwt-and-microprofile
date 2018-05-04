@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'lib/backbone-localstorage'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -31,9 +31,13 @@
                 groups: '',
 
                 access_token: '',
+                access_exp: '',
+
                 token_type: '',
                 expires_in: '',
-                refresh_token: ''
+
+                refresh_token: '',
+                refresh_exp: ''
             },
             loginModel: null,
             initialize: function () {
@@ -51,33 +55,58 @@
             login: function(creds) {
                 var me = this;
                 return new Promise( function (res, rej) {
-                    me.logout().then( function () {
-                        me.loginModel.getAccess(creds)
-                            .then(function (resp) {
-                                var result = jwtDecode(resp['access_token']);
-                                if (!resp || !resp['access_token'] || !result) return rej(resp);
-                                me.set({
-                                    auth: true,
-                                    username: result['username'],
-                                    email: result['email'],
-                                    groups: result['groups'],
-
-                                    access_token: resp['access_token'],
-                                    token_type: resp['token_type'],
-                                    expires_in: resp['expires_in'],
-                                    refresh_token: resp['refresh_token']
-                                });
-
-                                me.save();
-                                res(me.get('auth'));
-                            })
-                            .catch(rej);
-                    })
-                });
+                    me.loginModel.getAccess(creds)
+                        .then(function (resp) {
+                            me.parseResp(resp);
+                            me.save();
+                            me.getAuth().then(res).catch(rej);
+                        })
+                        .catch(rej);
+                })
             },
             logout: function() {
                 var me = this;
                 return new Promise( function (res, rej) {
+                    me.parseResp();
+                    me.save();
+                    res(!me.get('auth'));
+                });
+            },
+            refresh: function() {
+                var me = this;
+                return new Promise( function (res, rej) {
+                    const rt = me.get('refresh_token');
+                    if (!rt) return rej('no token to refresh');
+                    me.loginModel.getRefresh(rt)
+                        .then(function (resp) {
+                            me.parseResp(resp);
+                            me.save();
+                            me.getAuth().then(res).catch(rej);
+                        })
+                        .catch(rej);
+                })
+            },
+            parseResp: function(resp) {
+                var me = this;
+                var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
+                var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
+                if (resp && resp['access_token'] && access_token) {
+                    me.set({
+                        auth: true,
+                        username: access_token['username'],
+                        email: access_token['email'],
+                        groups: access_token['groups'],
+
+                        access_token: resp['access_token'],
+                        access_exp: moment.unix(access_token.exp).valueOf(),
+
+                        token_type: resp['token_type'],
+                        expires_in: resp['expires_in'],
+
+                        refresh_token: resp['refresh_token'],
+                        refresh_exp: moment.unix(refresh_token.exp).valueOf()
+                    });
+                } else {
                     me.set({
                         auth: false,
                         username: '',
@@ -85,14 +114,15 @@
                         groups: '',
 
                         access_token: '',
+                        access_exp: '',
+
                         token_type: '',
                         expires_in: '',
-                        refresh_token: ''
-                    });
 
-                    me.save();
-                    res(!me.get('auth'));
-                });
+                        refresh_token: '',
+                        refresh_exp: ''
+                    });
+                }
             },
             getAuth: function() {
                 var me = this;
