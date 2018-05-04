@@ -40,11 +40,12 @@
                 refresh_exp: ''
             },
             loginModel: null,
+            ref: null,
             initialize: function () {
                 var me = this;
                 me.loginModel = new LoginModel();
-                var ref = _.throttle( function() {
-                    if(me.refreshTimeout = null) me.refreshRunner();
+                me.ref = _.throttle( function() {
+                    if (!me.refreshTimeout) me.refreshRunner();
                 }, 5000);
                 $.ajaxSetup({
                     beforeSend: function ( jqXHR ) {
@@ -52,36 +53,45 @@
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
                         }
-                        const now = moment().valueOf(),
-                                access_exp = me.get('access_exp'),
-                                refresh_exp = me.get('refresh_exp'),
-                                router = window.BackboneApp.getRouter(),
-                                left = (access_exp - now),
-                                leftRe = (refresh_exp - now);
-
-                        if ( !refresh_exp || leftRe < 0 ) {
-                            me.logout().then(
-                                function () {
-                                    router.navigate('login', {
-                                        trigger: true
-                                    });
-                                    AlertView.show('Warning', 'Access expired by refresh timeout, logged out.', 'warning');
-                                }
-                            );
-                            jqXHR.abort();
-                        } else if ( !access_exp || left < 0 ) {
-                            me.logout().then(
-                                function () {
-                                    router.navigate('login', {
-                                        trigger: true
-                                    });
-                                    AlertView.show('Warning', 'Access expired by inactivity timeout, logged out.', 'warning');
-                                }
-                            );
-                            jqXHR.abort();
-                        } else { ref(); }
+                        me.checkRefresh(jqXHR);
                     }
                 });
+
+                var originalNavigate = Backbone.history.navigate;
+                Backbone.history.navigate = function(fragment, options){
+                    originalNavigate.apply(this, arguments);
+                    me.checkRefresh();
+                }
+            },
+            checkRefresh: function(jqXHR) {
+                var me = this;
+                const now = moment().valueOf(),
+                    access_exp = me.get('access_exp'),
+                    refresh_exp = me.get('refresh_exp'),
+                    router = window.BackboneApp.getRouter(),
+                    left = (access_exp - now),
+                    leftRe = (refresh_exp - now);
+                if ( !refresh_exp || leftRe < 0 ) {
+                    me.logout().then(
+                        function () {
+                            router.navigate('login', {
+                                trigger: true
+                            });
+                            AlertView.show('Warning', 'Access expired by refresh timeout, logged out.', 'warning');
+                        }
+                    );
+                    jqXHR && jqXHR.abort();
+                } else if ( !access_exp || left < 0 ) {
+                    me.logout().then(
+                        function () {
+                            router.navigate('login', {
+                                trigger: true
+                            });
+                            AlertView.show('Warning', 'Access expired by inactivity timeout, logged out.', 'warning');
+                        }
+                    );
+                    jqXHR && jqXHR.abort();
+                } else { me.ref(); }
             },
             login: function(creds) {
                 var me = this;
