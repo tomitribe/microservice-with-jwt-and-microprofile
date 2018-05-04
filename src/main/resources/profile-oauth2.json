@@ -4,6 +4,8 @@
   "name": "movies",
   "refreshAllowed": true,
   "requiresClient": false,
+  "accessTokenExpireTTL": "30 seconds",
+  "refreshTokenExpireTTL": "1 minute",
   "allowedGrants": [
     "password",
     "client_credentials",
@@ -49,7 +51,7 @@
         "type": "RSA",
         "algorithm": "RSA-SHA256",
         "id": "my-rsa-key",
-        "privateValue": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCWK8UjyoHgPTLa\nPLQJ8SoXLLjpHSjtLxMqmzHnFscqhTVVaDpCRCb6e3Ii/WniQTWw8RA7vf4djz4H\nOzvlfBFNgvUGZHXDwnmGaNVaNzpHYFMEYBhE8VGGiveSkzqeLZI+Y02G6sQAfDtN\nqqzM/l5QX8X34oQFaTBW1r49nftvCpITiwJvWyhkWtXP9RP8sXi1im5Vi3dhupOh\nnelk5n0BfajUYIbfHA6ORzjHRbt7NtBl0L2J+0/FUdHyKs6KMlFGNw8O0Dq88qnM\nuXoLJiewhg9332W3DFMeOveel+//cvDnRsCRtPgd4sXFPHh+UShkso7+DRsChXa6\noGGQD3GdAgMBAAECggEAAjfTSZwMHwvIXIDZB+yP+pemg4ryt84iMlbofclQV8hv\n6TsI4UGwcbKxFOM5VSYxbNOisb80qasb929gixsyBjsQ8284bhPJR7r0q8h1C+jY\nURA6S4pk8d/LmFakXwG9Tz6YPo3pJziuh48lzkFTk0xW2Dp4SLwtAptZY/+ZXyJ6\n96QXDrZKSSM99Jh9s7a0ST66WoxSS0UC51ak+Keb0KJ1jz4bIJ2C3r4rYlSu4hHB\nY73GfkWORtQuyUDa9yDOem0/z0nr6pp+pBSXPLHADsqvZiIhxD/O0Xk5I6/zVHB3\nzuoQqLERk0WvA8FXz2o8AYwcQRY2g30eX9kU4uDQAQKBgQDmf7KGImUGitsEPepF\nKH5yLWYWqghHx6wfV+fdbBxoqn9WlwcQ7JbynIiVx8MX8/1lLCCe8v41ypu/eLtP\niY1ev2IKdrUStvYRSsFigRkuPHUo1ajsGHQd+ucTDf58mn7kRLW1JGMeGxo/t32B\nm96Af6AiPWPEJuVfgGV0iwg+HQKBgQCmyPzL9M2rhYZn1AozRUguvlpmJHU2DpqS\n34Q+7x2Ghf7MgBUhqE0t3FAOxEC7IYBwHmeYOvFR8ZkVRKNF4gbnF9RtLdz0DMEG\n5qsMnvJUSQbNB1yVjUCnDAtElqiFRlQ/k0LgYkjKDY7LfciZl9uJRl0OSYeX/qG2\ntRW09tOpgQKBgBSGkpM3RN/MRayfBtmZvYjVWh3yjkI2GbHA1jj1g6IebLB9SnfL\nWbXJErCj1U+wvoPf5hfBc7m+jRgD3Eo86YXibQyZfY5pFIh9q7Ll5CQl5hj4zc4Y\nb16sFR+xQ1Q9Pcd+BuBWmSz5JOE/qcF869dthgkGhnfVLt/OQzqZluZRAoGAXQ09\nnT0TkmKIvlza5Af/YbTqEpq8mlBDhTYXPlWCD4+qvMWpBII1rSSBtftgcgca9XLB\nMXmRMbqtQeRtg4u7dishZVh1MeP7vbHsNLppUQT9Ol6lFPsd2xUpJDc6BkFat62d\nXjr3iWNPC9E9nhPPdCNBv7reX7q81obpeXFMXgECgYEAmk2Qlus3OV0tfoNRqNpe\nMb0teduf2+h3xaI1XDIzPVtZF35ELY/RkAHlmWRT4PCdR0zXDidE67L6XdJyecSt\nFdOUH8z5qUraVVebRFvJqf/oGsXc4+ex1ZKUTbY0wqY1y9E39yvB3MaTmZFuuqk8\nf3cg+fr8aou7pr9SHhJlZCU=\n-----END PRIVATE KEY-----",
+        "privateValue": "-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgQCDmHl3xRgOul5ZLmW28oytdOlaXefUsCYCWi63h26eBw2uAKAZ\nprKkDMPWCSTQjXs2B5rSEK21HcdHOOuH0p2tEJ7xkHBA3nt8YDa0N0HE+Ybdxoj3\nOzvyFW7mIYg2rEXxgAio+8kJhJaX7/lKSS+pkQgGm+NNqzpcSeBMAITdQwIDAQAB\nAoGAKlymFYksAmm6P4kxEyCnapstF3sNSyldQvqW+Vuun05z9+SZpUhFT4wQatFM\nuZoh5LW0ABWAZcJtSR8oqvOA8CFoUY2lwlzcWVhnr5PFQiN4a1qO7WD1gKFhq6Ad\n74MF0IdaM3KwqR525M/w6BQEa43NHcyCm7ATPBcPoVN1IgECQQDkASb8IAuVq5qP\n4c9OPDjmTb3A4u9Ce1FB1SDKcJyaV11I1NM58MNsTfmBs5aViClD4tGOx2iqwf9V\nG6XL+8JDAkEAk8DoqTeWVxXrZA5Fo+4kFhq35ZYDs6X5T+0le91lwlBjTLtzptUP\nfQkg0TIOW+d6pN5+HfumpZis0kLhBQxJAQJAYaRkr6CBlY0x2eBYSSbdLzOnyYzl\n7dCl0c2WB1wGlMpJNsF929hRuHYEHhlsqYjwMxRVrhGTr1z5HdeDP0IHxQJAcE5T\nCjw8Q9lfYGAQwvfB6iNI4HNUQPrJM91XfnzcWgRsVeitkYOlEC8eCKR5kZWy/Ro4\n1mVvV7NiuTcofoPGAQJAJ4+INvCa1uTMGbtkxBYAhW5tQP24pbMIQKfxW3kMP0rM\n1v+Ezf6Q++7O/ilns/6ODEAub7dYCmB0CurYSGVmZQ==\n-----END RSA PRIVATE KEY-----\n",
         "active": true
       }
     ]
