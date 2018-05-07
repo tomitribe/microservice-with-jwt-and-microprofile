@@ -184,6 +184,7 @@
                         refresh_token: resp['refresh_token'],
                         refresh_exp: refresh_exp
                     });
+                    //me.chRef();
                 } else {
                     me.set({
                         auth: false,
@@ -224,8 +225,8 @@
                             // Uncomment if refresh is needed during an inactivity too
                             //me.refreshRunner(10 * min);
                             me.refreshActive = false;
-                        } else if (left > 4 * min) {
-                            me.refreshRunner(left - 2 * min);
+                        } else if (left > min) {
+                            me.refreshRunner(left - min);
                             me.refreshActive = false;
                         } else {
                             me.refresh()
