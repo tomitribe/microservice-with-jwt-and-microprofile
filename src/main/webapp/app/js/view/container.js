@@ -29,7 +29,6 @@
             events: {
                 'click .navbar-brand': function (evt) {
                     evt.preventDefault();
-                    console.log(evt.target)
                     var me = this,
                         router = window.BackboneApp.getRouter();
                     router.navigate(evt.target.href, {
