@@ -20,13 +20,21 @@
     'use strict';
 
     var deps = ['app/js/templates', 'app/js/tools/i18n', 'backbone', 'app/js/tools/alert.view', 'app/js/tools/gravatar'];
-    define(deps, function (templates, il8n, Backbone, AlertView) {
+    define(deps, function (templates, il8n, Backbone, AlertView, Gravatar) {
         var View = Backbone.View.extend({
             initialize: function(options){
                 this.options = options || {};
             },
             el: 'body',
             events: {
+                'click .navbar-brand': function (evt) {
+                    evt.preventDefault();
+                    var me = this,
+                        router = window.BackboneApp.getRouter();
+                    router.navigate(evt.target.href, {
+                        trigger: true
+                    });
+                },
                 'click .ux-logout': function (evt) {
                     evt.preventDefault();
                     var me = this,
@@ -53,18 +61,18 @@
                 me.currentView.render();
                 contentArea.append(me.currentView.el);
 
-                var access = window.ux.auth.getAuth().then(
-                    function (value) {
-                        me.$('.ux-logout').attr("title", window.ux.auth.get('username'));
-                        me.$('.ux-avatar').attr("src", window.ux.auth.get('gravatar'));
-                        me.$('.ux-logout').show("fast");
+                window.ux.auth.getAuth().then(
+                    function () {
+                        me.$('.ux-username').text(window.ux.auth.get('username'));
+                        me.$('.ux-avatar').attr("src", Gravatar.gravatar(window.ux.auth.get('email')));
+                        me.$('.ux-logout-block').show("fast");
                     }
                 ).catch(
                     function () {
-                        me.$('.ux-logout').hide(
+                        me.$('.ux-logout-block').hide(
                             "fast",
                             function(){
-                                me.$('.ux-logout').attr("title", "");
+                                me.$('.ux-username').text("");
                                 me.$('.ux-avatar').attr("src", "");
                             }
                         );

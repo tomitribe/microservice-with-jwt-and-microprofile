@@ -41,29 +41,62 @@
             },
             loginModel: null,
             ref: null,
+            chRef: null,
             initialize: function () {
                 var me = this;
                 me.loginModel = new LoginModel();
-                me.ref = _.throttle( function() {
-                    if (!me.refreshTimeout) me.refreshRunner();
-                }, 5000);
+                me.ref = _.throttle(function () {
+                    if (!me.refreshActive) me.refreshRunner();
+                }, 1000);
+                me.chRef = _.throttle(me.checkRefresh, 500);
+
                 $.ajaxSetup({
-                    beforeSend: function ( jqXHR ) {
+                    beforeSend: function (jqXHR) {
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
                         }
-                        me.checkRefresh(jqXHR);
+                        me.chRef(jqXHR);
+                    }
+                });
+
+                $( document ).ajaxError(function (model, jqXHR) {
+                    if (jqXHR.status === 401) {
+                        me.logout().then(
+                            function () {
+                                if (!window.BackboneApp) return window.open('login',"_self",false);
+                                const router = window.BackboneApp.getRouter();
+                                router.navigate('login', {
+                                    trigger: true
+                                });
+                                AlertView.show('Warning', 'Your access has expired', 'warning');
+                            }
+                        );
                     }
                 });
 
                 var originalNavigate = Backbone.history.navigate;
-                Backbone.history.navigate = function(fragment, options){
+                Backbone.history.navigate = function (fragment, options) {
                     originalNavigate.apply(this, arguments);
-                    me.checkRefresh();
+                    me.chRef();
                 }
             },
-            checkRefresh: function(jqXHR) {
+            checkRefStatus: false,
+            checkRefresh: function (jqXHR) {
+                var me = this;
+                if (!window.BackboneApp || me.checkRefStatus) return;
+                me.checkRefStatus = true;
+                me.getAuth().then(function () {
+                    //if(!me.checkLogout(jqXHR)) {
+                        me.ref();
+                    //}
+                })
+                    .catch(_.noop)
+                    .then(function () {
+                        me.checkRefStatus = false
+                    });
+            },
+            /*checkLogout: function(jqXHR) {
                 var me = this;
                 const now = moment().valueOf(),
                     access_exp = me.get('access_exp'),
@@ -71,7 +104,7 @@
                     router = window.BackboneApp.getRouter(),
                     left = (access_exp - now),
                     leftRe = (refresh_exp - now);
-                if ( !refresh_exp || leftRe < 0 ) {
+                if (!refresh_exp || leftRe < 0) {
                     me.logout().then(
                         function () {
                             router.navigate('login', {
@@ -81,7 +114,8 @@
                         }
                     );
                     jqXHR && jqXHR.abort();
-                } else if ( !access_exp || left < 0 ) {
+                    return true;
+                } else if (!access_exp || left < 0) {
                     me.logout().then(
                         function () {
                             router.navigate('login', {
@@ -91,11 +125,13 @@
                         }
                     );
                     jqXHR && jqXHR.abort();
-                } else { me.ref(); }
-            },
-            login: function(creds) {
+                    return true;
+                }
+                return false;
+            },*/
+            login: function (creds) {
                 var me = this;
-                return new Promise( function (res, rej) {
+                return new Promise(function (res, rej) {
                     me.loginModel.getAccess(creds)
                         .then(function (resp) {
                             me.parseResp(resp);
@@ -105,17 +141,17 @@
                         .catch(rej);
                 })
             },
-            logout: function() {
+            logout: function () {
                 var me = this;
-                return new Promise( function (res, rej) {
+                return new Promise(function (res, rej) {
                     me.parseResp();
                     me.save();
                     res(!me.get('auth'));
                 });
             },
-            refresh: function() {
+            refresh: function () {
                 var me = this;
-                return new Promise( function (res, rej) {
+                return new Promise(function (res, rej) {
                     const rt = me.get('refresh_token');
                     if (!rt) return rej('no token to refresh');
                     me.loginModel.getRefresh(rt)
@@ -126,7 +162,7 @@
                         .catch(rej);
                 })
             },
-            parseResp: function(resp) {
+            parseResp: function (resp) {
                 var me = this;
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
@@ -148,6 +184,7 @@
                         refresh_token: resp['refresh_token'],
                         refresh_exp: refresh_exp
                     });
+                    //me.chRef();
                 } else {
                     me.set({
                         auth: false,
@@ -166,30 +203,46 @@
                     });
                 }
             },
+            refreshActive: false,
             refreshTimeout: null,
-            refreshRunner: function(timeout) {
+            clearRunner: function () {
                 var me = this;
-                me.refreshTimeout && clearTimeout(me.refreshTimeout);
-                me.getAuth().then( function () {
-                    me.refreshTimeout = setTimeout(function(){
+                clearTimeout(me.refreshTimeout);
+                me.refreshActive = false;
+            },
+            refreshRunner: function (timeout) {
+                var me = this;
+                if (me.refreshActive) return;
+                me.clearRunner();
+                me.getAuth().then(function () {
+                    me.refreshActive = true;
+                    me.refreshTimeout = setTimeout(function () {
                         const now = moment().valueOf(),
                             access_exp = me.get('access_exp'),
                             left = (access_exp - now),
                             min = 60 * 1000;
-                        if (left > 12 * min) {
-                            // Uncomment if inactivity checker is not needed
+                        if (left > 17 * min) {
+                            // Uncomment if refresh is needed during an inactivity too
                             //me.refreshRunner(10 * min);
-                        } else if (left > 4 * min) {
-                            me.refreshRunner(left - 2 * min);
+                            me.refreshActive = false;
+                        } else if (left > min) {
+                            me.refreshRunner(left - min);
+                            me.refreshActive = false;
                         } else {
-                            me.refresh();
+                            me.refresh()
+                                .then(_.noop)
+                                .catch(_.noop)
+                                // finally
+                                .then(function () {
+                                    me.refreshActive = false;
+                                })
                         }
                     }, timeout);
                 });
             },
-            getAuth: function() {
+            getAuth: function () {
                 var me = this;
-                return new Promise(function(res, rej) {
+                return new Promise(function (res, rej) {
                     me.get('auth') ? res() : rej();
                 })
             }

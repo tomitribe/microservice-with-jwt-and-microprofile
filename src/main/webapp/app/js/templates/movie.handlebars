@@ -1,56 +1,58 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content modal-header-detached">
-        <div class="modal-header d-flex justify-content-center">
-            <h3 class="modal-title font-weight-light">{{i18n "movie"}}</h3>
-            <button type="button" class="close font-weight-light" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label for="{{id_next}}" class="col-lg-2 mb-0 text-muted control-label">{{i18n "title"}}</label>
+        <form class="form-horizontal ux-movie-form" role="form" id="uxMovieForm">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title font-weight-light">{{i18n "movie"}}</h3>
+                <button type="button" class="ux-close close font-weight-light" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
 
-                    <div class="col-lg-10">
-                        <input class="form-control ux-title" id="{{id_current}}" placeholder="{{i18n 'title'}}"
-                               type="text" value="{{title}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="{{id_next}}" class="col-lg-2 mb-0 text-muted control-label">{{i18n "director"}}</label>
+                    <div class="form-group">
+                        <label for="{{id_next}}" class="col-12 mb-0 text-muted control-label">{{i18n "title"}}</label>
 
-                    <div class="col-lg-10">
-                        <input class="form-control ux-director" id="{{id_current}}"
-                               type="text" placeholder="{{i18n 'director'}}" value="{{director}}">
+                        <div class="col-12">
+                            <input class="form-control ux-title" id="{{id_current}}" placeholder="{{i18n 'title'}}"
+                                   type="text" value="{{title}}" name="title" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="{{id_next}}" class="col-lg-2 mb-0 text-muted control-label">{{i18n "genre"}}</label>
+                    <div class="form-group">
+                        <label for="{{id_next}}" class="col-12 mb-0 text-muted control-label">{{i18n "director"}}</label>
 
-                    <div class="col-lg-10">
-                        <input class="form-control ux-genre" id="{{id_current}}" placeholder="{{i18n 'genre'}}"
-                               type="text" value="{{genre}}">
+                        <div class="col-12">
+                            <input class="form-control ux-director" id="{{id_current}}"
+                                   type="text" placeholder="{{i18n 'director'}}" value="{{director}}" name="director" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="{{id_next}}" class="col-lg-2 mb-0 text-muted control-label">{{i18n "rating"}}</label>
+                    <div class="form-group">
+                        <label for="{{id_next}}" class="col-12 mb-0 text-muted control-label">{{i18n "genre"}}</label>
 
-                    <div class="col-lg-10">
-                        <input class="form-control ux-rating" id="{{id_current}}"
-                               type="number" min="0" max="10" placeholder="{{i18n 'rating'}}" value="{{rating}}">
+                        <div class="col-12">
+                            <input class="form-control ux-genre" id="{{id_current}}" placeholder="{{i18n 'genre'}}"
+                                   type="text" value="{{genre}}" name="genre" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="{{id_next}}" class="col-lg-2 mb-0 text-muted control-label">{{i18n "year"}}</label>
+                    <div class="form-group">
+                        <label for="{{id_next}}" class="col-12 mb-0 text-muted control-label">{{i18n "rating"}}</label>
 
-                    <div class="col-lg-10">
-                        <input class="form-control ux-year" id="{{id_current}}" placeholder="{{i18n 'year'}}"
-                               type="number" min="1900" max="{{currentYear}}" value="{{year}}">
+                        <div class="col-12">
+                            <input class="form-control ux-rating" id="{{id_current}}"
+                                   type="number" min="0" max="10" placeholder="{{i18n 'rating'}}"
+                                   value="{{rating}}" name="rating" required>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default ux-close" data-dismiss="modal">{{i18n "close"}}</button>
-            <button type="button" class="btn btn-primary ux-save" data-dismiss="modal">{{i18n "save"}}</button>
-        </div>
+                    <div class="form-group">
+                        <label for="{{id_next}}" class="col-12 mb-0 text-muted control-label">{{i18n "year"}}</label>
+
+                        <div class="col-12">
+                            <input class="form-control ux-year" id="{{id_current}}" placeholder="{{i18n 'year'}}"
+                                   type="number" min="1900" max="{{currentYear}}" value="{{year}}" name="year" required>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default ux-close" data-dismiss="modal">{{i18n "close"}}</button>
+                <button type="submit" class="btn btn-primary ux-save">{{i18n "save"}}</button>
+            </div>
+        </form>
     </div>
 </div>
