@@ -28,34 +28,28 @@
             tagName: 'div',
             className: 'modal',
             events: {
-                'click .ux-main': function (evt) {
-                    evt.preventDefault();
-                    var me = this;
-                    me.trigger('show-application', {});
-                },
-                'click .ux-close': function (evt) {
+                'hidden.bs.modal': function (evt) {
                     evt.preventDefault();
                     var me = this;
                     me.remove();
                 },
-                'click .ux-save': function (evt) {
-                    evt.preventDefault();
+                'submit .ux-movie-form': function (evt) {
                     var me = this;
-                    var model = me.model;
+                    if (evt.target.checkValidity()) {
+                        evt.preventDefault();
+                        const model = me.model,
+                            newValues = $(evt.target)
+                                .serializeArray()
+                                .reduce(function (obj, item) {
+                                    obj[item.name] = item.value;
+                                    return obj;
+                                }, {});
 
-                    function set(name) {
-                        var field = $(me.$el.find('.ux-' + name).get(0));
-                        model.set(name, field.val());
+                        model.set(newValues);
+                        me.trigger('save-model', {
+                            model: model
+                        });
                     }
-
-                    set('title');
-                    set('director');
-                    set('genre');
-                    set('rating');
-                    set('year');
-                    me.trigger('save-model', {
-                        model: model
-                    });
                 }
             },
             render: function () {

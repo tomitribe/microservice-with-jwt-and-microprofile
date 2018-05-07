@@ -92,6 +92,9 @@
                             var count = Math.ceil(total / max);
                             paginator.setCount(count);
                             mainView.setPaginator(count);
+                            if(!!count && pageNumber > count) {
+                                router.showMain(count, fieldName, fieldValue);
+                            }
                         }
                     });
                 }
@@ -107,10 +110,17 @@
                     'main/:page/:field/:value': 'showMain',
                     'login(/:tail)': 'showLogin',
                     'logout(/:tail)': 'showLogout',
-                    'movie/:id': 'showMovie'
+                    'movie/:id': 'showMovie',
+                    '*path':  'defaultRoute'
                 },
                 showLogin: function () {
-                    containerView.showView(loginView);
+                    auth.getAuth().then( function () {
+                        router.navigate('main/1', {
+                            trigger: true
+                        });
+                    }).catch( function () {
+                        containerView.showView(loginView);
+                    })
                 },
                 showLogout: function () {
                     window.ux.auth.logout()
@@ -122,6 +132,12 @@
                                 AlertView.show('Success', 'logged out', 'success');
                             }
                         )
+                },
+                defaultRoute: function () {
+                    var me = this;
+                    me.navigate('main/1', {
+                        trigger: true
+                    });
                 },
                 showMovie: function (id) {
                     var me = this;
@@ -147,7 +163,7 @@
                                         showMovieWindow(data.model)
                                             .then(function() {
                                                 view.render();
-                                            });
+                                            }).catch(_.noop);
                                     });
 
                                     containerView.showView(view);
@@ -196,8 +212,10 @@
                     success: function (data) {
                         router.showMain();
                     },
-                    error: function () {
-                        AlertView.show('Failed', 'Failed to load movies (forbidden)', 'danger');
+                    error: function (e) {
+                        if (e.status === 403) {
+                            AlertView.show('Failed', 'Failed to load movies (forbidden)', 'danger');
+                        }
                     }
                 });
             });
@@ -207,8 +225,10 @@
                     success: function () {
                         router.showMain(appState.page, appState.fieldName, appState.fieldValue);
                     },
-                    error: function () {
-                        AlertView.show('Failed', 'Failed to delete movie (forbidden)', 'danger');
+                    error: function (model, jqXHR) {
+                        if (jqXHR.status === 403){
+                            AlertView.show('Failed', 'Failed to delete movie (forbidden)', 'danger');
+                        }
                     }
                 });
             });
@@ -222,11 +242,14 @@
                     view.on('save-model', function (data) {
                         data.model.save({}, {
                             success: function () {
+                                view.$el.modal('hide');
                                 view.remove();
                                 res();
                             },
-                            error: function () {
-                                AlertView.show('Failed', 'Failed to ' + (nw ? 'create' : 'update') + ' movie (forbidden)', 'danger');
+                            error: function (model, jqXHR) {
+                                if (jqXHR.status === 403) {
+                                    AlertView.show('Failed', 'Failed to ' + (nw ? 'create' : 'update') + ' movie (forbidden)', 'danger');
+                                }
                                 rej();
                             }
                         });
@@ -241,14 +264,14 @@
                 showMovieWindow(new MovieModel({}), true)
                     .then(function() {
                         loadPage(appState.page, appState.fieldName, appState.fieldValue);
-                    });
+                    }).catch(_.noop);
             });
 
             mainView.on('edit', function (data) {
                 showMovieWindow(data.model)
                     .then(function() {
                         loadPage(appState.page, appState.fieldName, appState.fieldValue);
-                    });
+                    }).catch(_.noop);
             });
 
             mainView.on('movie', function (data) {

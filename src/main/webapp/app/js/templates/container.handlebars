@@ -1,16 +1,15 @@
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand logo" href="main">{{i18n "application.name"}}</a>
+            <a class="navbar-brand logo" href="main/1">{{i18n "application.name"}}</a>
         </div>
-        <div class="ux-logout" style="display: none;" >
-            <a href="/logout" class="d-flex align-items-center justify-content-center"><i class="fa logout-icon"></i></a>
-            <button class="btn btn-primary" style="display: none;" title="{{userName}}">
-                <div class="inset">
-                    <img class="ux-avatar" src="" height="20" width="20">
-                </div>
-                <div>Logout</div>
-            </button>
+        <div class="d-flex align-items-center text-light ux-logout-block mr-1" style="display: none;" >
+            <img class="mr-2 rounded-circle ux-avatar" src="" height="30" width="30">
+            <div class="small mr-3">
+                <div class="small">WELCOME</div>
+                <h6 class="ux-username font-weight-normal m-0"></h6>
+            </div>
+            <a href="/logout" class="d-flex align-items-center justify-content-center ux-logout"><i class="fa logout-icon"></i></a>
         </div>
     </div>
 </nav>

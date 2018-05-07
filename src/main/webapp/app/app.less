@@ -163,10 +163,13 @@ body {
     width: 400px;
     margin-bottom: 0;
     box-shadow: 1px 1px 4px -1px #454545;
+    z-index: 1051;
   }
 
-  .ux-logout {
-    display: flex;
+  .ux-logout-block {
+    .ux-avatar {
+      box-shadow: 0 0 1px 2px #fff, 0 0 1px 2px #fff, 0 0 1px 2px #fff, 0 0 1px #fff inset;
+    }
   }
 
   .inset {
@@ -214,6 +217,7 @@ body {
 .right-addon input { padding-right: 35px!important; }
 
 .text-muted { color: #9e9e9e!important; }
+.text-light-gray { color: #bac5cd!important; }
 
 .modal-header-detached{
   margin-top: 70px;
@@ -224,7 +228,7 @@ body {
     width: 100%;
     border-bottom: none;
     color: #fff;
-    .close {
+    .ux-close {
       position: absolute;
       right: -0.5em;
       bottom: 1em;
@@ -253,4 +257,17 @@ body {
 
 .modal-backdrop {
   background-color: #5f4a92;
+}
+
+.ux-hover-dots {
+  font-size: 1.5em;
+  &:hover, .btn-group.show > & {
+    color: #5496f3;
+  }
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  span{
+    color: #fff!important;
+  }
 }
