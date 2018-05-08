@@ -34,6 +34,7 @@ define(['lib/underscore', 'lib/handlebars', 'app/js/tools/log'], function (_, Ha
         'movie': 'Movie',
         'close': 'Close',
         'save': 'Save',
+        'cancel': 'cancel',
 
         "January": "January",
         "February": "February",
