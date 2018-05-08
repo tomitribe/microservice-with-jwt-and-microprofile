@@ -158,6 +158,25 @@ body {
     .panel-body>.input-group {
       margin-bottom: 15px;
     }
+
+    .search-movies-bar {
+      height: 50px;
+      @search-bar-color: #524e80;
+      border: 1px solid @search-bar-color;
+
+      span.input-group-text, input, #dropdownMenuButton {
+        color: #FFFFFF;
+        background-color: @search-bar-color;
+      }
+
+      span.input-group-text span.fa {
+        padding-left: 10px;
+      }
+
+      input::placeholder {
+        color: #FFFFFF;
+      }
+    }
   }
 
   .alert.fixed {
