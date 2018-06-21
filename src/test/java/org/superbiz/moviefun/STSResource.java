@@ -19,8 +19,6 @@ package org.superbiz.moviefun;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.apache.commons.lang.StringUtils;
 import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
-import org.superbiz.moviefun.sts.TokenErrorResponse;
-import org.superbiz.moviefun.sts.TokenResponse;
 import org.superbiz.moviefun.utils.TokenUtil;
 
 import javax.ws.rs.Consumes;
