@@ -1,3 +1,4 @@
+//api/profile/oauth2
 {
   "prefix": "Bearer",
   "header": "Authorization",

@@ -1,3 +1,4 @@
+//api/http/
 {
   "displayName": null,
   "description": null,
@@ -10,6 +11,6 @@
       "ALL"
     ]
   },
-  "name": "Movie API Connection",
-  "endpoint": "http://host.docker.internal:8181"
+  "name": "Movies API Connection",
+  "endpoint": "http://${DOCKER_HOST}:8181"
 }

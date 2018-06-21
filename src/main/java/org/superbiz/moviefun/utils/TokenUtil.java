@@ -52,13 +52,13 @@ import java.util.Set;
  */
 public class TokenUtil {
 
-    public static final String PRIVATE_KEY_PEM = "/privateKey.pem";
+    public static final String PRIVATE_KEY_PEM = "/privateKey-pkcs8.pem";
 
     private TokenUtil() {
     }
 
     /**
-     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
+     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey-pkcs1.pem
      * test resource key.
      *
      * @param jsonResName - name of test resources file
@@ -70,7 +70,7 @@ public class TokenUtil {
     }
 
     /**
-     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
+     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey-pkcs1.pem
      * test resource key, possibly with invalid fields.
      *
      * @param jsonResName   - name of test resources file
@@ -89,7 +89,7 @@ public class TokenUtil {
     }
 
     /**
-     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
+     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey-pkcs1.pem
      * test resource key, possibly with invalid fields.
      *
      * @param jsonResName   - name of test resources file
@@ -115,7 +115,7 @@ public class TokenUtil {
     }
 
     /**
-     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey.pem
+     * Utility method to generate a JWT string from a JSON resource file that is signed by the privateKey-pkcs1.pem
      * test resource key, possibly with invalid fields.
      *
      * @param jwtContent   - the JSON Payload for the JWT

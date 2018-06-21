@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.superbiz.moviefun.sts;
+package org.superbiz.moviefun;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Path("token")
 @Produces(MediaType.APPLICATION_JSON)

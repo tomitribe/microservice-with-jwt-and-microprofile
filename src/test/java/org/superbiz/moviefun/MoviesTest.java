@@ -34,7 +34,6 @@ import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
 import org.superbiz.moviefun.rest.MoviesResource;
 import org.superbiz.moviefun.utils.TokenUtil;
 import org.superbiz.rest.GreetingResource;
-import org.superbiz.moviefun.sts.STSResource;
 
 import java.net.URL;
 import java.util.Collection;

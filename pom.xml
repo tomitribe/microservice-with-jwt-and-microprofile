@@ -28,7 +28,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomee.version>8.0.0-TT.1</tomee.version>
+    <tomee.version>8.0.0-SNAPSHOT</tomee.version>
     <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
     <mp-jwt.version>1.0</mp-jwt.version>
     <mp-config.version>1.2</mp-config.version>
@@ -262,6 +262,16 @@
       <artifactId>backbone-localstorage</artifactId>
       <version>1.1.16</version>
     </dependency>
+
+    <!-- to make sure the dependency is downloaded for the tomee maven plugin -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>apache-tomee</artifactId>
+      <version>${tomee.version}</version>
+      <scope>test</scope>
+      <classifier>microprofile</classifier>
+      <type>zip</type>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -326,4 +336,5 @@
       <url>file://${basedir}/target/snapshot-repo/</url>
     </snapshotRepository>
   </distributionManagement>
+
 </project>
