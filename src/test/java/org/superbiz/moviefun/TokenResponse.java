@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.superbiz.moviefun.sts;
+package org.superbiz.moviefun;
 
 import org.apache.johnzon.mapper.JohnzonProperty;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.UUID;

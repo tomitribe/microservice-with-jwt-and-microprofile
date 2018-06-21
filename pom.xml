@@ -112,7 +112,29 @@
       <name>Apache Snapshot Repository</name>
       <url>https://repository.apache.org/content/groups/snapshots</url>
     </repository>
+    <repository>
+      <id>tomitribe-all</id>
+      <url>https://repository.tomitribe.com/content/repositories/releases-tomitribe/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tomitribe-all</id>
+      <url>https://repository.tomitribe.com/content/repositories/releases-tomitribe/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencies>
     <dependency>
@@ -262,6 +284,16 @@
       <artifactId>backbone-localstorage</artifactId>
       <version>1.1.16</version>
     </dependency>
+
+    <!-- to make sure the dependency is downloaded for the tomee maven plugin -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>apache-tomee</artifactId>
+      <version>${tomee.version}</version>
+      <scope>test</scope>
+      <classifier>microprofile</classifier>
+      <type>zip</type>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -326,4 +358,5 @@
       <url>file://${basedir}/target/snapshot-repo/</url>
     </snapshotRepository>
   </distributionManagement>
+
 </project>

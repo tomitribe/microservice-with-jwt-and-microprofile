@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.superbiz.moviefun.sts;
+package org.superbiz.moviefun;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.apache.commons.lang.StringUtils;
 import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
+import org.superbiz.moviefun.sts.TokenErrorResponse;
+import org.superbiz.moviefun.sts.TokenResponse;
 import org.superbiz.moviefun.utils.TokenUtil;
 
 import javax.ws.rs.Consumes;
@@ -33,7 +35,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Path("token")
 @Produces(MediaType.APPLICATION_JSON)

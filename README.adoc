@@ -13,8 +13,11 @@ If you want to know more, check out the website at https://tribestream.io
 The best and simplest way to start the API Gateway is to use Docker as follow
 
 ```
-docker run -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
+docker run --rm -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
 ```
+
+Once the Tribestream API Gateway is up and running, you can connect to the console with the following URL
+http://localhost:8080/tag/
 
 # Start the movie chat application
 
@@ -27,8 +30,7 @@ mvn clean install -DskipTests tomee:run
 It should start on port 8181 so it does not clash with the Gateway
 So what you need is to open a browser and navigate to http://localhost:8181/moviefun/
 
-# convert a private key from traditional format to pkcs#8 format.
+There are 4 accounts created at startup
+- alex/password with create, update and delete role
 
-```
-openssl pkcs8 -topk8 -inform pem -in src/main/resources/privateKey.pem -outform pem -nocrypt -out src/main/resources/privateKey-pkcs8.pem
-```
+
