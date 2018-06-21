@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="mx-auto text-center mb-3 mt-3">
-            <h3 class="display-4">{{i18n "movies"}}</h3>
+            <h3 class="pt-4 pb-2">{{i18n "movies"}}</h3>
         </div>
     </div>
 </div>
@@ -10,18 +10,18 @@
         <div class="mx-auto">
             <div class="card">
                 <div class="card-body px-0 py-0">
-                    <div class="input-group mb-0">
-                        <span class="input-group-prepend">
-                            <button class="btn btn-outline-primary ux-filter-action border-light" type="button">
+                    <div class="input-group mb-0 input-group-sm search-movies-bar rounded-top ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text border-0 rounded-0">
                                 <span class="fa fa-search"></span>
-                            </button>
-                        </span>
-                        <input type="text" class="form-control ux-filter-field border-light" placeholder="Search for anything">
+                            </span>
+                        </div>
+                        <input type="text" class="form-control border-0 form-control-sm ux-filter-field" placeholder="Search for anything" autofocus>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-primary dropdown-toggle border-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle border-0 rounded-0 pr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown">
                                 <span class="ux-selected-filter">{{i18n "title"}}</span>
                             </button>
-                            <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenuButton">
                                 <a data-option="title" class="dropdown-item ux-filter">{{i18n "title"}}</a>
                                 <a data-option="director" class="dropdown-item ux-filter">{{i18n "director"}}</a>
                                 <a data-option="genre" class="dropdown-item ux-filter">{{i18n "genre"}}</a>
@@ -33,11 +33,11 @@
                     <table class="table">
                         <thead class="thead-gray">
                             <tr>
-                                <th scope="col" class="font-weight-normal pl-4">{{i18n "title"}}</th>
-                                <th scope="col" class="font-weight-normal">{{i18n "director"}}</th>
-                                <th scope="col" class="font-weight-normal">{{i18n "genre"}}</th>
-                                <th scope="col" class="font-weight-normal">{{i18n "rating"}}</th>
-                                <th scope="col" class="font-weight-normal">{{i18n "year"}}</th>
+                                <th scope="col" class="font-weight-normal pl-4 pt-1 pb-1">{{i18n "title"}}</th>
+                                <th scope="col" class="font-weight-normal pt-1 pb-1">{{i18n "director"}}</th>
+                                <th scope="col" class="font-weight-normal pt-1 pb-1">{{i18n "genre"}}</th>
+                                <th scope="col" class="font-weight-normal pt-1 pb-1">{{i18n "rating"}}</th>
+                                <th scope="col" class="font-weight-normal pt-1 pb-1">{{i18n "year"}}</th>
                                 <th scope="col" class="font-weight-normal pr-4"></th>
                             </tr>
                         </thead>
