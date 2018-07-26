@@ -30,10 +30,10 @@ public class MovieClaimsSourceResource {
     private static HashMap<String, UserPreferences> data = new HashMap<>();
 
     static {
-        data.put("alex", new UserPreferences("Spanish", "Guatemala JUG", "Mystery", 16, "3211 1922 4433 1111"));
-        data.put("john", new UserPreferences("English", "Boston JUG", "Action", 17, "2311 2345 8899 2222"));
-        data.put("mark", new UserPreferences("English", "Lodon JUG", "Drama", 21, "1122 6543 5858 3333"));
-        data.put("nick", new UserPreferences("Spanish", "Mexico JUG", "Comedy", 30, "7789 8765 1222 4444"));
+        data.put("alex", new UserPreferences("SPANISH", "Guatemala JUG", "Mystery", 16, "3211 1922 4433 1111"));
+        data.put("john", new UserPreferences("ENGLISH", "Boston JUG", "Action", 17, "2311 2345 8899 2222"));
+        data.put("mark", new UserPreferences("ENGLISH", "Lodon JUG", "Drama", 21, "1122 6543 5858 3333"));
+        data.put("nick", new UserPreferences("SPANISH", "Mexico JUG", "Comedy", 30, "7789 8765 1222 4444"));
     }
 
     @POST

@@ -69,6 +69,7 @@ public class MoviesResource {
     @Claim("jti")
     private ClaimValue<String> jti;
 
+
     @Inject
     @DecryptedValue("creditCard")
     private String creditCard;
@@ -101,6 +102,7 @@ public class MoviesResource {
         builder.append(String.format(" (email=%s)", email));
         builder.append(String.format(" (person creditCard=%s)", person.getCreditCard()));
         builder.append(String.format(" (creditCard=%s)", creditCard));
+        builder.append(String.format(" (language=%s)", person.getLanguage()));
         builder.append(String.format(" (groups=%s)", StringUtils.join(jwtPrincipal.getGroups(), ", ")));
         return builder.toString();
     }

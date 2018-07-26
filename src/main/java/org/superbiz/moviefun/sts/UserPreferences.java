@@ -16,23 +16,68 @@
  */
 package org.superbiz.moviefun.sts;
 
+import org.superbiz.moviefun.rest.Language;
 import org.superbiz.moviefun.utils.Cipher;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "preferences")
 public class UserPreferences {
 
     private String language;
     private String jug;
     private String creditCard;
     private String preferredGenre;
-    private int age;
+    private Integer age;
 
     public UserPreferences() {
-
     }
 
     public UserPreferences(final String language, final String jug, final String preferredGenre, final int age, final String creditCard) {
         this.language = language;
         this.jug = jug;
         this.creditCard = new String(Cipher.INSTANCE.getPasswordCipher().encrypt(creditCard));
+        this.preferredGenre = preferredGenre;
+        this.age = age;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getJug() {
+        return jug;
+    }
+
+    public void setJug(String jug) {
+        this.jug = jug;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public String getPreferredGenre() {
+        return preferredGenre;
+    }
+
+    public void setPreferredGenre(String preferredGenre) {
+        this.preferredGenre = preferredGenre;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
