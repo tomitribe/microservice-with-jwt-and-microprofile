@@ -64,6 +64,7 @@
                 window.ux.auth.getAuth().then(
                     function () {
                         me.$('.ux-username').text(window.ux.auth.get('username'));
+                        me.$('.ux-jug').text(window.ux.auth.get('jug'));
                         me.$('.ux-avatar').attr("src", Gravatar.gravatar(window.ux.auth.get('email')));
                         me.$('.ux-logout-block').show("fast");
                     }
@@ -73,6 +74,7 @@
                             "fast",
                             function(){
                                 me.$('.ux-username').text("");
+                                me.$('.ux-jug').text("");
                                 me.$('.ux-avatar').attr("src", "");
                             }
                         );
