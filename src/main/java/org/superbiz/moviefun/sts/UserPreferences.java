@@ -1,5 +1,8 @@
 package org.superbiz.moviefun.sts;
 
+import org.apache.openejb.cipher.PasswordCipher;
+import org.apache.openejb.cipher.StaticDESPasswordCipher;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -9,10 +12,12 @@ public class UserPreferences {
     private String jug;
     private String creditCard;
 
-    public UserPreferences(String language, String jug, String creditCard) {
+    private final PasswordCipher passwordCipher = new StaticDESPasswordCipher();
+
+    public UserPreferences(final String language, final String jug, final String creditCard) {
         this.language = language;
         this.jug = jug;
-        this.creditCard = jug;
+        this.creditCard = new String(passwordCipher.encrypt(creditCard));
     }
 
     public String getLanguage() {
