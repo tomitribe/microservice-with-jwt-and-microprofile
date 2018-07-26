@@ -65,7 +65,7 @@
                     function () {
                         me.$('.ux-username').text(window.ux.auth.get('username'));
                         if(window.ux.auth.get('jug')) {
-                            me.$('.ux-jug').text("-  " + window.ux.auth.get('jug'));
+                            me.$('.ux-jug').text("-     " + window.ux.auth.get('jug'));
                         } else {
                             me.$('.ux-jug').text("");
                         }
