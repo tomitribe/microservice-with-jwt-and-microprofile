@@ -69,6 +69,9 @@ public class MoviesResource {
     private ClaimValue<String> jti;
 
     @Inject
+    private Person person;
+
+    @Inject
     private JsonWebToken jwtPrincipal;
 
     @Context
