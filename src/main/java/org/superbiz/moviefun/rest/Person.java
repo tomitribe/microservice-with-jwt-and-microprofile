@@ -34,7 +34,7 @@ public class Person {
     private String email;
 
     @Inject
-    @Claim("creditCard")
+    @DecryptedValue("creditCard")
     private String creditCard;
 
     @Inject
@@ -44,9 +44,6 @@ public class Person {
     @Inject
     @Claim("age")
     private int age;
-
-    @DecryptedValue("crediCard")
-    private String CreditCard;
 
     public Person() {
     }

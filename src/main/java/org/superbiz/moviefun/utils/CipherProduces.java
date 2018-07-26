@@ -19,12 +19,13 @@ package org.superbiz.moviefun.utils;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import java.util.Optional;
 
-@ApplicationScoped
+@RequestScoped
 public class CipherProduces {
 
     @Inject
@@ -35,6 +36,9 @@ public class CipherProduces {
     public String decryptedCreditCard(InjectionPoint injectionPoint) {
         final DecryptedValue annotation = injectionPoint.getAnnotated().getAnnotation(DecryptedValue.class);
         final Optional<Object> claim = jsonWebToken.claim(annotation.value());
-        return Cipher.INSTANCE.getPasswordCipher().decrypt(claim.toString().toCharArray());
+        if (claim.isPresent()) {
+            return Cipher.INSTANCE.getPasswordCipher().decrypt(claim.get().toString().toCharArray());
+        }
+        return null;
     }
 }
