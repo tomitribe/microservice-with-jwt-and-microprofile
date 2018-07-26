@@ -1,7 +1,6 @@
 package org.superbiz.moviefun.sts;
 
-import org.apache.openejb.cipher.PasswordCipher;
-import org.apache.openejb.cipher.StaticDESPasswordCipher;
+import org.superbiz.moviefun.utils.Cipher;
 
 public class UserPreferences {
 
@@ -11,14 +10,17 @@ public class UserPreferences {
     private String preferredGenre;
     private int age;
 
-    private final PasswordCipher passwordCipher = new StaticDESPasswordCipher();
+    public UserPreferences() {
 
-    public UserPreferences(){
     }
 
-    public UserPreferences(final String language, final String jug, final String preferredGenre, final int age, final String creditCard) {
+    public UserPreferences(final String language, final String jug, final String creditCard) {
         this.language = language;
         this.jug = jug;
-        this.creditCard = new String(passwordCipher.encrypt(creditCard));
+        this.creditCard = new String(Cipher.INSTANCE.getPasswordCipher().encrypt(creditCard));
+    }
+
+    public String getLanguage() {
+        return language;
     }
 }

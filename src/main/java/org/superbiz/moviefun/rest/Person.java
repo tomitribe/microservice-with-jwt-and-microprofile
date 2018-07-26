@@ -4,6 +4,8 @@ import org.eclipse.microprofile.jwt.Claim;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
 
 @RequestScoped
 public class Person {
@@ -23,5 +25,12 @@ public class Person {
     @Inject
     @Claim("age")
     private int age;
+
+    @Produces
+    @RequestScoped
+    @DecryptedValue
+    public String decryptedCreditCard(InjectionPoint injectionPoint) {
+        final Claim annotation = injectionPoint.getAnnotated().getAnnotation(Claim.class);
+    }
 
 }
