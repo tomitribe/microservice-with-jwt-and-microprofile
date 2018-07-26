@@ -14,25 +14,23 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.superbiz.moviefun.sts;
+package org.superbiz.moviefun.utils;
 
-import org.superbiz.moviefun.utils.Cipher;
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public class UserPreferences {
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    private String language;
-    private String jug;
-    private String creditCard;
-    private String preferredGenre;
-    private int age;
-
-    public UserPreferences() {
-
-    }
-
-    public UserPreferences(final String language, final String jug, final String preferredGenre, final int age, final String creditCard) {
-        this.language = language;
-        this.jug = jug;
-        this.creditCard = new String(Cipher.INSTANCE.getPasswordCipher().encrypt(creditCard));
-    }
+@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface DecryptedValue {
+    @Nonbinding
+    String value() default "";
 }

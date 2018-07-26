@@ -14,25 +14,27 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package org.superbiz.moviefun.sts;
+package org.superbiz.moviefun.utils;
 
-import org.superbiz.moviefun.utils.Cipher;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
-public class UserPreferences {
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
+import java.util.Optional;
 
-    private String language;
-    private String jug;
-    private String creditCard;
-    private String preferredGenre;
-    private int age;
+@ApplicationScoped
+public class CipherProduces {
 
-    public UserPreferences() {
+    @Inject
+    private JsonWebToken jsonWebToken;
 
-    }
-
-    public UserPreferences(final String language, final String jug, final String preferredGenre, final int age, final String creditCard) {
-        this.language = language;
-        this.jug = jug;
-        this.creditCard = new String(Cipher.INSTANCE.getPasswordCipher().encrypt(creditCard));
+    @Produces
+    @DecryptedValue
+    public String decryptedCreditCard(InjectionPoint injectionPoint) {
+        final DecryptedValue annotation = injectionPoint.getAnnotated().getAnnotation(DecryptedValue.class);
+        final Optional<Object> claim = jsonWebToken.claim(annotation.value());
+        return Cipher.INSTANCE.getPasswordCipher().decrypt(claim.toString().toCharArray());
     }
 }
