@@ -65,15 +65,9 @@
                     function () {
                         me.$('.ux-username').text(window.ux.auth.get('username'));
                         if(window.ux.auth.get('jug')) {
-                            me.$('.ux-jug').text(window.ux.auth.get('jug'));
-                            me.$('.ux-head-add-block').show("fast");
+                            me.$('.ux-jug').text("-  " + window.ux.auth.get('jug'));
                         } else {
-                            me.$('.ux-head-add-block').hide(
-                                "fast",
-                                function(){
-                                    me.$('.ux-jug').text("");
-                                }
-                            );
+                            me.$('.ux-jug').text("");
                         }
                         me.$('.ux-avatar').attr("src", Gravatar.gravatar(window.ux.auth.get('email')));
                         me.$('.ux-logout-block').show("fast");
@@ -84,13 +78,8 @@
                             "fast",
                             function(){
                                 me.$('.ux-username').text("");
+                                me.$('.ux-jug').text("");
                                 me.$('.ux-avatar').attr("src", "");
-                                me.$('.ux-head-add-block').hide(
-                                    "fast",
-                                    function(){
-                                        me.$('.ux-jug').text("");
-                                    }
-                                );
                             }
                         );
                     }
