@@ -57,32 +57,16 @@ public class Person {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(String creditCard) {
-        this.creditCard = creditCard;
-    }
-
     public String getPreferredGenre() {
         return preferredGenre;
-    }
-
-    public void setPreferredGenre(String preferredGenre) {
-        this.preferredGenre = preferredGenre;
     }
 
     public int getAge() {
