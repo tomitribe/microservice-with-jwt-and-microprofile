@@ -17,7 +17,6 @@
 package org.superbiz.moviefun.rest;
 
 import org.eclipse.microprofile.jwt.Claim;
-import org.eclipse.microprofile.jwt.ClaimValue;
 import org.superbiz.moviefun.utils.DecryptedValue;
 
 import javax.enterprise.context.RequestScoped;
@@ -36,7 +35,7 @@ public class Person {
 
     @Inject
     @Claim("language")
-    private ClaimValue<Language> language;
+    private String language;
 
     @Inject
     @DecryptedValue("creditCard")
@@ -45,10 +44,6 @@ public class Person {
     @Inject
     @Claim("preferredGenre")
     private String preferredGenre;
-
-    @Inject
-    @Claim("age")
-    private int age;
 
     public Person() {
     }
@@ -69,15 +64,7 @@ public class Person {
         return preferredGenre;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Language getLanguage() {
-        return language.getValue();
+    public String getLanguage() {
+        return language;
     }
 }
