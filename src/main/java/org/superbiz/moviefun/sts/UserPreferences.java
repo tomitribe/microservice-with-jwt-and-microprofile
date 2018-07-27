@@ -16,7 +16,6 @@
  */
 package org.superbiz.moviefun.sts;
 
-import org.superbiz.moviefun.rest.Language;
 import org.superbiz.moviefun.utils.Cipher;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,6 +28,8 @@ public class UserPreferences {
     private String creditCard;
     private String preferredGenre;
     private Integer age;
+    private Double balance = 300.21;
+    private Boolean active = true;
 
     public UserPreferences() {
     }
@@ -79,5 +80,17 @@ public class UserPreferences {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 }
