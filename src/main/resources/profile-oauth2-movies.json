@@ -40,9 +40,30 @@
     {
       "claimSourceType": "HTTP",
       "claimSourceRef": "movies-claims-source",
-      "source": "audience",
+      "source": "preferredGenre",
       "type": "CLAIM",
-      "target": "aud"
+      "target": "preferredGenre"
+    },
+    {
+      "claimSourceType": "HTTP",
+      "claimSourceRef": "movies-claims-source",
+      "source": "jug",
+      "type": "CLAIM",
+      "target": "jug"
+    },
+    {
+      "claimSourceType": "HTTP",
+      "claimSourceRef": "movies-claims-source",
+      "source": "creditCard",
+      "type": "CLAIM",
+      "target": "creditCard"
+    },
+    {
+      "claimSourceType": "HTTP",
+      "claimSourceRef": "movies-claims-source",
+      "source": "language",
+      "type": "CLAIM",
+      "target": "language"
     }
   ],
   "externalSigning": {

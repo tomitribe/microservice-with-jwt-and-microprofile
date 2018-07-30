@@ -29,6 +29,7 @@
                 username: '',
                 email: '',
                 groups: '',
+                jug: '',
 
                 access_token: '',
                 access_exp: '',
@@ -174,6 +175,7 @@
                         username: access_token['username'],
                         email: access_token['email'],
                         groups: access_token['groups'],
+                        jug: access_token['jug'],
 
                         access_token: resp['access_token'],
                         access_exp: access_exp,
@@ -191,6 +193,7 @@
                         username: '',
                         email: '',
                         groups: '',
+                        jug: '',
 
                         access_token: '',
                         access_exp: '',

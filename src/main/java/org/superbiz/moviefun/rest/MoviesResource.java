@@ -23,6 +23,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.superbiz.moviefun.Comment;
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
+import org.superbiz.moviefun.utils.DecryptedValue;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -68,6 +69,14 @@ public class MoviesResource {
     @Claim("jti")
     private ClaimValue<String> jti;
 
+
+    @Inject
+    @DecryptedValue("creditCard")
+    private String creditCard;
+
+    @Inject
+    private Person person;
+
     @Inject
     private JsonWebToken jwtPrincipal;
 
@@ -91,8 +100,10 @@ public class MoviesResource {
         builder.append(username);
         builder.append(String.format(" (jti=%s)", jti));
         builder.append(String.format(" (email=%s)", email));
+        builder.append(String.format(" (person creditCard=%s)", person.getCreditCard()));
+        builder.append(String.format(" (creditCard=%s)", creditCard));
+        builder.append(String.format(" (language=%s)", person.getLanguage()));
         builder.append(String.format(" (groups=%s)", StringUtils.join(jwtPrincipal.getGroups(), ", ")));
-
         return builder.toString();
     }
 
