@@ -27,70 +27,32 @@ public class UserPreferences {
     private String jug;
     private String creditCard;
     private String preferredGenre;
-    private Integer age;
-    private Double balance = 300.21;
-    private Boolean active = true;
 
     public UserPreferences() {
     }
 
-    public UserPreferences(final String language, final String jug, final String preferredGenre, final int age, final String creditCard) {
+    public UserPreferences(final String language, final String jug, final String preferredGenre, final String creditCard) {
         this.language = language;
         this.jug = jug;
         this.creditCard = new String(Cipher.INSTANCE.getPasswordCipher().encrypt(creditCard));
         this.preferredGenre = preferredGenre;
-        this.age = age;
     }
 
     public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getJug() {
         return jug;
-    }
-
-    public void setJug(String jug) {
-        this.jug = jug;
     }
 
     public String getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(String creditCard) {
-        this.creditCard = creditCard;
-    }
-
     public String getPreferredGenre() {
         return preferredGenre;
     }
 
-    public void setPreferredGenre(String preferredGenre) {
-        this.preferredGenre = preferredGenre;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
 }
+
