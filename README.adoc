@@ -12,6 +12,12 @@ If you want to know more, check out the website at https://tribestream.io
 
 The best and simplest way to start the API Gateway is to use Docker as follow
 
+For Linux:
+```
+docker run --net="host" --rm -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
+```
+
+For OSX and Windows:
 ```
 docker run --rm -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
 ```
