@@ -33,4 +33,4 @@ So what you need is to open a browser and navigate to http://localhost:8181/movi
 There are 4 accounts created at startup
 - alex/password with create, update and delete role
 
-To run a full demo of this application access: https://tribestream.io/guide/en/api-gateway/microservice-security-microprofile-jwt/current/
+To run a full demo of Microprofile JWT using this application access: https://tribestream.io/guide/en/api-gateway/microservice-security-microprofile-jwt/current/
