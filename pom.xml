@@ -27,9 +27,9 @@
   <name>REST Microprofile-JWT</name>
 
   <scm>
-    <connection>scm:git:https://github.com/tomitribe/microservice-with-jwt-and-microprofile.git</connection>
-    <developerConnection>scm:git:https://github.com/tomitribe/microservice-with-jwt-and-microprofile.git</developerConnection>
-    <url>scm:git:https://github.com/tomitribe/microservice-with-jwt-and-microprofile.git</url>
+    <connection>scm:git:git@github.com:tomitribe/microservice-with-jwt-and-microprofile.git</connection>
+    <developerConnection>scm:git:git@github.com:tomitribe/microservice-with-jwt-and-microprofile.git</developerConnection>
+    <url>scm:git:git@github.com:tomitribe/microservice-with-jwt-and-microprofile.git</url>
     <tag>HEAD</tag>
   </scm>
 
