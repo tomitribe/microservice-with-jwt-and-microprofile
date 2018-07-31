@@ -126,6 +126,19 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>apache-m2-snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/content/groups/snapshots</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>tomitribe-public</id>
+      <name>Tomitribe Releases Public</name>
+      <url>https://repository.tomitribe.com/content/repositories/releases</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.tomee</groupId>
