@@ -26,6 +26,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.superbiz.moviefun.rest.ApplicationConfig;
@@ -41,6 +42,7 @@ import java.util.HashMap;
 
 import static java.util.Collections.singletonList;
 
+@Ignore
 @RunWith(Arquillian.class)
 public class MoviesTest {
 

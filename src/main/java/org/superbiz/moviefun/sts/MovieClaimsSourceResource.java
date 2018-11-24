@@ -21,18 +21,28 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 @Path("claims")
 public class MovieClaimsSourceResource {
 
+    private static HashMap<String, UserPreferences> data = new HashMap<>();
+
+    static {
+        data.put("alex", new UserPreferences("SPANISH", "Guatemala JUG", "Mystery", "3211 1922 4433 1111"));
+        data.put("john", new UserPreferences("ENGLISH", "Boston JUG", "Action", "2311 2345 8899 2222"));
+        data.put("mark", new UserPreferences("ENGLISH", "Lodon JUG", "Drama", "1122 6543 5858 3333"));
+        data.put("nick", new UserPreferences("SPANISH", "Mexico JUG", "Comedy", "7789 8765 1222 4444"));
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String authenticate(final Map<String, String> payload) {
-        return "{\"audience\":[\"microprofile\",\"jwt\",\"tomee\"]}";
+    public UserPreferences authenticate(final Map<String, String> payload) {
+        String username = payload.get("username");
+        UserPreferences userPreferences = data.get(username);
+        return userPreferences;
     }
 
 }
