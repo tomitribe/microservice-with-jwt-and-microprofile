@@ -34,7 +34,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomee.version>7.1.0</tomee.version>
+    <tomee.version>8.0.0-M2</tomee.version>
     <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
     <mp-jwt.version>1.0</mp-jwt.version>
     <mp-config.version>1.2</mp-config.version>
@@ -112,37 +112,11 @@
     </dependencies>
   </dependencyManagement>
 
-  <repositories>
-    <repository>
-      <id>apache-m2-snapshot</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots</url>
-    </repository>
-    <repository>
-      <id>tomitribe-public</id>
-      <name>Tomitribe Releases Public</name>
-      <url>https://repository.tomitribe.com/content/repositories/releases</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>apache-m2-snapshot</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>tomitribe-public</id>
-      <name>Tomitribe Releases Public</name>
-      <url>https://repository.tomitribe.com/content/repositories/releases</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.tomee</groupId>
       <artifactId>javaee-api</artifactId>
-      <version>7.0-1</version>
+      <version>8.0</version>
       <scope>provided</scope>
     </dependency>
 
