@@ -33,10 +33,6 @@ public class MoviesMPJWTConfigurationProvider {
 
     @Produces
     Optional<JWTAuthContextInfo> getOptionalContextInfo() throws Exception {
-        JWTAuthContextInfo contextInfo = new JWTAuthContextInfo();
-
-        // todo use MP Config to load the configuration
-        contextInfo.setIssuedBy(ISSUED_BY);
 
         byte[] encodedBytes = TokenUtil.readPublicKey("/publicKey.pem").getEncoded();
 
@@ -44,8 +40,7 @@ public class MoviesMPJWTConfigurationProvider {
         final KeyFactory kf = KeyFactory.getInstance("RSA");
         final RSAPublicKey pk = (RSAPublicKey) kf.generatePublic(spec);
 
-        contextInfo.setSignerKey(pk);
-        contextInfo.setExpGracePeriodSecs(10);
+        JWTAuthContextInfo contextInfo =  JWTAuthContextInfo.authContextInfo(pk,ISSUED_BY);
 
         return Optional.of(contextInfo);
     }
