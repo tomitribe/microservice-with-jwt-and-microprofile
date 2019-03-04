@@ -12,5 +12,5 @@
     ]
   },
   "name": "Movies API Connection",
-  "endpoint": "http://${DOCKER_HOST}:8181"
+  "endpoint": "http://localhost:8181"
 }
