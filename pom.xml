@@ -90,7 +90,21 @@
       <plugin>
         <groupId>com.tomitribe.tribestream</groupId>
         <artifactId>tribestream-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.4</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.tomitribe.tribestream</groupId>
+            <artifactId>tribestream-api-gateway</artifactId>
+            <version>1.4</version>
+            <type>tar.gz</type>
+            <exclusions>
+              <exclusion>
+                <groupId>*</groupId>
+                <artifactId>*</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -341,12 +355,11 @@
     </snapshotRepository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
+  <pluginRepositories>
+    <pluginRepository>
       <id>tribestream.io</id>
       <name>Tribestream Repository</name>
       <url>https://repository.tribestream.io/signup/maven/</url>
-    </repository>
-  </repositories>
-
+    </pluginRepository>
+  </pluginRepositories>
 </project>
