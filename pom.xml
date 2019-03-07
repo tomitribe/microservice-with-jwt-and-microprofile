@@ -355,6 +355,13 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <id>tribestream.io</id>
+      <name>Tribestream Repository</name>
+      <url>https://repository.tribestream.io/signup/maven/</url>
+    </repository>
+  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>tribestream.io</id>
