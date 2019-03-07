@@ -88,23 +88,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>com.tomitribe.tribestream</groupId>
+        <groupId>com.tomitribe.tribestream.maven</groupId>
         <artifactId>tribestream-maven-plugin</artifactId>
-        <version>1.4</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.tomitribe.tribestream</groupId>
-            <artifactId>tribestream-api-gateway</artifactId>
-            <version>1.4</version>
-            <type>tar.gz</type>
-            <exclusions>
-              <exclusion>
-                <groupId>*</groupId>
-                <artifactId>*</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-        </dependencies>
+        <version>1.5</version>
       </plugin>
     </plugins>
   </build>
