@@ -90,7 +90,7 @@
       <plugin>
         <groupId>com.tomitribe.tribestream.maven</groupId>
         <artifactId>tribestream-maven-plugin</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
       </plugin>
     </plugins>
   </build>
