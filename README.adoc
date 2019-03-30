@@ -1,6 +1,6 @@
 # Microprofile JWT Movie Chat
 
-This web application aims at showing how to use Microprofile JWT to secure your microservices.
+This web application shows how to use Microprofile JWT to secure your microservices.
 It uses Apache TomEE as the default Microprofile implementation.
 
 # OAuth2 + JWT (STS)
@@ -10,33 +10,34 @@ We use Tribestream API Gateway as it's a complete Security Token Service.
 It's also capable of doing routing and while enforcing permissions.
 If you want to know more, check out the website at https://tribestream.io
 
-The best and simplest way to start the API Gateway is to use Docker as follow
+To start the Tribestream API Gateway on a terminal execute the following command:
 
-For Linux:
-```
-docker run --net="host" --rm -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
-```
+    mvn tag:run
 
-For OSX and Windows:
-```
-docker run --rm -it --name tag -e LICENSE=accept -e CASSANDRA_EMBEDDED=true -p 8080:8080 tomitribe/tribestream-api-gateway:latest
-```
+The following message indicates the Tribestream API Gateway is up and running:
 
-Once the Tribestream API Gateway is up and running, you can connect to the console with the following URL
-http://localhost:8080/tag/
+    [INFO] Tribestream started http://localhost:8080/tag/
+
+You can login now using on a browser the following URL: http://localhost:8080/tag/ using `admin` for both the username and password.
 
 # Start the movie chat application
 
-Up on start up, the movie application will populate necessary data into the API Gateway.
+On a new terminal execute the following command:
 
-```
-mvn clean install -DskipTests tomee:run
-```
 
-It should start on port 8181 so it does not clash with the Gateway
-So what you need is to open a browser and navigate to http://localhost:8181/moviefun/
+    mvn clean install -DskipTests tomee:run
 
-There are 4 accounts created at startup
-- alex/password with create, update and delete role
+The following message indicates the application is up and running:
 
-To run a full demo of Microprofile JWT using this application access: https://tribestream.io/guide/en/api-gateway/microservice-security-microprofile-jwt/current/
+    08-Mar-2019 11:34:07.760 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Starting ProtocolHandler ["http-nio-8181"]
+    08-Mar-2019 11:34:07.765 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Starting ProtocolHandler ["ajp-nio-8010"]
+    08-Mar-2019 11:34:07.767 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server startup in 6786 ms
+
+
+You can login now using on a browser the following URL: http://localhost:8181/moviefun/
+
+You can test any of the following accounts:
+- Account `alex` with password `password` with create, update and delete role.
+- Account `john` with password `password` with just comments add role.
+
+For deeper exaplanation of Microprofile JWT using this application access: https://tribestream.io/guide/en/api-gateway/microservice-security-microprofile-jwt/current/

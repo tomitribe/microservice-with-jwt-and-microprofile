@@ -88,6 +88,11 @@
           </synchronization>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.tomitribe.tribestream.maven</groupId>
+        <artifactId>tribestream-maven-plugin</artifactId>
+        <version>1.6</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -337,4 +342,18 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <id>tribestream.io</id>
+      <name>Tribestream Repository</name>
+      <url>https://repository.tribestream.io/signup/maven/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tribestream.io</id>
+      <name>Tribestream Repository</name>
+      <url>https://repository.tribestream.io/signup/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
