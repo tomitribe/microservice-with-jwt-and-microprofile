@@ -21,20 +21,19 @@ limitations under the License.
 <head>
   <meta charset="utf-8">
   <title>Moviefun</title>
-  <link href="<c:url value='/webjars/font-awesome/5.0.10/web-fonts-with-css/css/fontawesome-all.min-jsf.css'/>" rel="stylesheet">
-  <link href="<c:url value='/webjars/bootstrap/4.1.0/css/bootstrap.min.css'/>" rel="stylesheet">
-  <link href="<c:url value='/app/app.less'/>" rel="stylesheet/less" type="text/css">
-  <script src="<c:url value='/webjars/requirejs/2.3.5/require.min.js'/>"></script>
+  <link href="/movies/webjars/font-awesome/5.0.10/web-fonts-with-css/css/fontawesome-all.min-jsf.css" rel="stylesheet">
+  <link href="/movies/webjars/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/movies/app/app.less" rel="stylesheet/less" type="text/css">
+  <script src="/movies/webjars/requirejs/2.3.5/require.min.js"></script>
   <script type="text/javascript">
     window.ux = window.ux || {};
     window.ux.SESSION_ID = "<%=request.getSession().getId()%>";
-//    window.ux.ROOT_URL = "<c:url value='/'/>".replace(';jsessionid=' + window.ux.SESSION_ID, '');
-    window.ux.ROOT_URL = "http://localhost:8080/movies/";
+    window.ux.ROOT_URL = "/movies/";
     window.tokenHost = "http://localhost:8080/oauth2/token";
   </script>
-  <base href="<c:url value='/'/>">
-  <script src="<c:url value='/app/config.js'/>"></script>
-  <script src="<c:url value='/app/js/start.js'/>"></script>
+  <base href="/movies/">
+  <script src="/movies/app/config.js"></script>
+  <script src="/movies/app/js/start.js"></script>
 </head>
 <body></body>
 </html>
