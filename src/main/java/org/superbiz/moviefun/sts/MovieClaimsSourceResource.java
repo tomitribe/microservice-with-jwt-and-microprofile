@@ -32,7 +32,7 @@ public class MovieClaimsSourceResource {
     static {
         data.put("alex", new UserPreferences("SPANISH", "Guatemala JUG", "Mystery", "3211 1922 4433 1111"));
         data.put("john", new UserPreferences("ENGLISH", "Boston JUG", "Action", "2311 2345 8899 2222"));
-        data.put("mark", new UserPreferences("ENGLISH", "Lodon JUG", "Drama", "1122 6543 5858 3333"));
+        data.put("mark", new UserPreferences("ENGLISH", "London JUG", "Drama", "1122 6543 5858 3333"));
         data.put("nick", new UserPreferences("SPANISH", "Mexico JUG", "Comedy", "7789 8765 1222 4444"));
     }
 
@@ -41,8 +41,7 @@ public class MovieClaimsSourceResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public UserPreferences authenticate(final Map<String, String> payload) {
         String username = payload.get("username");
-        UserPreferences userPreferences = data.get(username);
-        return userPreferences;
+        return data.get(username);
     }
 
 }
