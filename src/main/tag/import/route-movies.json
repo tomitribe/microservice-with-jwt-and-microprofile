@@ -1,7 +1,7 @@
 //api/route
 {
   "name": "movies",
-  "modRewrite": "RewriteCond %{REQUEST_METHOD} POST [OR]\nRewriteCond %{REQUEST_METHOD} PUT [OR]\nRewriteCond %{REQUEST_METHOD} DELETE\nRewriteRule \"^/movies(.*)$\" \"%{API:Movies API Connection}/moviefun/rest/movies$1\" [P,auth]\n\nRewriteRule \"^/movies(.*)$\" \"%{API:Movies API Connection}/moviefun/rest/movies$1\" [P]",
+  "modRewrite": "RewriteCond %{REQUEST_METHOD} POST [OR]\nRewriteCond %{REQUEST_METHOD} PUT [OR]\nRewriteCond %{REQUEST_METHOD} DELETE\nRewriteRule \"^/movies(.*)$\" \"%{API:Movies API Connection}/moviefun$1\" [P,auth]\n\nRewriteRule \"^/movies(.*)$\" \"%{API:Movies API Connection}/moviefun$1\" [P]",
   "profileRequiresAll": true,
   "profiles": [
     {
