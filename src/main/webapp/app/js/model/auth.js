@@ -183,8 +183,8 @@
                 console.log(resp, jwkJs, httpSignaturesJs);
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
-                var possessor_key = resp && resp['key'] && jwtDecode(resp['key']);
-                var possessor_key_id = resp && resp['key_id'] && jwtDecode(resp['key_id']);
+                var possessor_key = resp && resp['key'];
+                var possessor_key_id = resp && resp['key_id'];
                 if (resp && resp['access_token'] && access_token) {
                     const access_exp = moment.unix(access_token.exp).valueOf(),
                         refresh_exp = moment.unix(refresh_token.exp).valueOf();
