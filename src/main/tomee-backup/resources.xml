@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resources>
+  <Resource id="register-cluster" class-name="org.superbiz.moviefun.LoadBalancerRegisterService">
+    hostUrl = http://localhost:8080
+    # acceptAllCertificates = true
+
+    # do we need to unregister at the end. Worse case, the TAG will figure out it's offline and yank it from the hosts list
+    # unregisterOnShutdown =
+    # unregisterEndpoint =
+
+    # URL where we gonna register
+    # registerEndpoint =
+
+    # host details
+    # active = true
+    # weight = 1
+    serverUrl = http://localhost:8182
+    connectionId = movies-api-connection
+
+    # HTTP Signatures credentials
+    signaturesKeyId = my-key-id
+    signaturesKey = bd0c18188f2c1ed5ba917c7914ec25f31a6bd7e061edc081
+    signaturesAlgorithm = hmac-sha256
+    # signaturesHeader =
+    # signaturesSignedHeaders = (request-target) date
+  </Resource>
+</resources>

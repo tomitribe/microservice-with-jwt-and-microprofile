@@ -16,6 +16,12 @@
  */
 package org.superbiz.moviefun;
 
+import static java.util.Collections.singletonList;
+
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.johnzon.jaxrs.JohnzonProvider;
@@ -35,12 +41,6 @@ import org.superbiz.moviefun.rest.MoviesMPJWTConfigurationProvider;
 import org.superbiz.moviefun.rest.MoviesResource;
 import org.superbiz.moviefun.utils.TokenUtil;
 import org.superbiz.rest.GreetingResource;
-
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-
-import static java.util.Collections.singletonList;
 
 @Ignore
 @RunWith(Arquillian.class)
