@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -52,10 +52,25 @@
                 me.chRef = _.throttle(me.checkRefresh, 500);
 
                 $.ajaxSetup({
-                    beforeSend: function (jqXHR) {
-                        var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                    beforeSend: async function (jqXHR, settings) {
+                        var access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
+                            possessor_key = me.get('possessor_key'),
+                            key_id = me.get('possessor_key_id');
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
+                        }
+                        console.log(jqXHR, settings);
+                        if (typeof possessor_key !== 'undefined' && !!possessor_key) {
+                            const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','date','content-length'],settings.method, settings, this.headers );
+                            const signature = await jwkJs.HMAC.sign('256')
+                                .then(res => res.sign(signingString, possessor_key));
+                            const signatureHeader = new httpSignaturesJs.Signature(
+                                key_id||'',
+                                "hmac-sha256",
+                                signature,
+                                this.headers
+                            );
+                            jqXHR.setRequestHeader('Authorization', signatureHeader.toString());
                         }
                         me.chRef(jqXHR);
                     }
@@ -165,8 +180,11 @@
             },
             parseResp: function (resp) {
                 var me = this;
+                console.log(resp, jwkJs, httpSignaturesJs);
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
+                var possessor_key = resp && resp['key'] && jwtDecode(resp['key']);
+                var possessor_key_id = resp && resp['key_id'] && jwtDecode(resp['key_id']);
                 if (resp && resp['access_token'] && access_token) {
                     const access_exp = moment.unix(access_token.exp).valueOf(),
                         refresh_exp = moment.unix(refresh_token.exp).valueOf();
@@ -178,6 +196,8 @@
                         jug: access_token['jug'],
 
                         access_token: resp['access_token'],
+                        possessor_key: resp['key'],
+                        possessor_key_id: resp['key_id'],
                         access_exp: access_exp,
 
                         token_type: resp['token_type'],
@@ -196,6 +216,8 @@
                         jug: '',
 
                         access_token: '',
+                        possessor_key: '',
+                        possessor_key_id: '',
                         access_exp: '',
 
                         token_type: '',
