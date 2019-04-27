@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js', 'header-wrapper'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs, headerWrapper) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -53,13 +53,18 @@
 
                 $.ajaxSetup({
                     beforeSend: async function (jqXHR, settings) {
+                        headerWrapper.wrapXHR(jqXHR);
+
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
                             possessor_key = me.get('possessor_key'),
                             key_id = me.get('possessor_key_id');
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
                         }
-                        console.log(jqXHR, settings);
+                        jqXHR.setRequestHeader('test', 'test2');
+                        
+                        console.log(jqXHR, settings, this.headers, jqXHR.requestHeaders);
+
                         if (typeof possessor_key !== 'undefined' && !!possessor_key) {
                             const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','date','content-length'],settings.method, settings, this.headers );
                             const signature = await jwkJs.HMAC.sign('256')
@@ -74,6 +79,10 @@
                         }
                         me.chRef(jqXHR);
                     }
+                });
+
+                $( document ).ajaxSend(function( event, request, settings ) {
+                    console.log( event, request, settings );
                 });
 
                 $( document ).ajaxError(function (model, jqXHR) {
