@@ -61,19 +61,19 @@
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
                         }
-                        jqXHR.setRequestHeader('test', 'test2');
+                        jqXHR.setRequestHeader('xdate', new Date().toISOString());
                         
                         console.log(jqXHR, settings, this.headers, jqXHR.requestHeaders);
 
                         if (typeof possessor_key !== 'undefined' && !!possessor_key) {
-                            const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','date','content-length'],settings.method, settings, this.headers );
+                            const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','xdate'], settings.method, settings.url, jqXHR.requestHeaders );
                             const signature = await jwkJs.HMAC.sign('256')
                                 .then(res => res.sign(signingString, possessor_key));
                             const signatureHeader = new httpSignaturesJs.Signature(
                                 key_id||'',
                                 "hmac-sha256",
                                 signature,
-                                this.headers
+                                jqXHR.requestHeaders
                             );
                             jqXHR.setRequestHeader('Authorization', signatureHeader.toString());
                         }
@@ -193,7 +193,7 @@
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
                 var possessor_key = resp && resp['key'];
-                var possessor_key_id = resp && resp['key_id'];
+                var possessor_key_id = possessor_key && JSON.parse(atob(possessor_key)).kid;
                 if (resp && resp['access_token'] && access_token) {
                     const access_exp = moment.unix(access_token.exp).valueOf(),
                         refresh_exp = moment.unix(refresh_token.exp).valueOf();
@@ -205,8 +205,8 @@
                         jug: access_token['jug'],
 
                         access_token: resp['access_token'],
-                        possessor_key: resp['key'],
-                        possessor_key_id: resp['key_id'],
+                        possessor_key: possessor_key,
+                        possessor_key_id: possessor_key_id,
                         access_exp: access_exp,
 
                         token_type: resp['token_type'],
