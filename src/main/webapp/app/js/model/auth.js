@@ -154,6 +154,7 @@
                             trigger: true
                         });
                         AlertView.show('Warning', 'Your access has expired', 'warning');
+                        setTimeout(() => location.reload(), 350);
                     }
                 );
             },
