@@ -69,6 +69,7 @@
                             jqXHR,
                             cb: null,
                             send: function (retryRequest) {
+                                const refresh_exp = me.get('refresh_exp');
                                 $.ajax({
                                     ...this.originalOptions,
                                     ignoreTransport: true,
@@ -79,7 +80,6 @@
                                 }).fail(xhr => {
                                     //console.log(xhr);
                                     const now = moment().valueOf(),
-                                        refresh_exp = me.get('refresh_exp'),
                                         leftRe = refresh_exp && (refresh_exp - now);
 
                                     if (me.checkRefStatus) {
