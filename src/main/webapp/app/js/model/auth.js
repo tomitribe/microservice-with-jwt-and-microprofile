@@ -61,26 +61,101 @@
                     }
                 });
 
-                $( document ).ajaxError(function (model, jqXHR) {
-                    if (jqXHR.status === 401) {
-                        me.logout().then(
-                            function () {
-                                if (!window.BackboneApp) return window.open('login',"_self",false);
-                                const router = window.BackboneApp.getRouter();
-                                router.navigate('login', {
-                                    trigger: true
+                $.ajaxTransport("+*", function (options, originalOptions, jqXHR) {
+                    if (!originalOptions.ignoreTransport) {
+                        const transport = {
+                            options,
+                            originalOptions,
+                            jqXHR,
+                            cb: null,
+                            send: function (retryRequest) {
+                                $.ajax({
+                                    ...this.originalOptions,
+                                    ignoreTransport: true,
+                                    retryRequest
+                                }).done((data, status, xhr) => {
+                                    //console.log(data, status, xhr);
+                                    this.cb(200, status, {text: xhr.responseText, JSON: xhr.responseJSON});
+                                }).fail(xhr => {
+                                    //console.log(xhr);
+                                    const now = moment().valueOf(),
+                                        refresh_exp = me.get('refresh_exp'),
+                                        leftRe = refresh_exp && (refresh_exp - now);
+
+                                    if (me.checkRefStatus) {
+                                        setTimeout(() => {
+                                            this.send(true);
+                                        }, 100);
+                                    } else if (xhr.status === 401) {
+                                        //console.log(xhr);
+                                        //console.log(!refresh_exp || leftRe < 0 || retryRequest);
+
+                                        // if refresh_token expired, does not exist, or retryRequest failed
+                                        if (!refresh_exp || leftRe < 0 || retryRequest) {
+                                            // Refresh token expired
+                                            me.logoutAndExit();
+                                        } else {
+                                            //console.log(me.checkRefStatus, refresh_exp !== me.get('refresh_exp'));
+                                            setTimeout(() => {
+                                                if (me.checkRefStatus || refresh_exp !== me.get('refresh_exp')) {
+                                                    this.send(true);
+                                                } else {
+                                                    me.logoutAndExit();
+                                                }
+                                            }, 200);
+                                        }
+                                    }
+
                                 });
-                                AlertView.show('Warning', 'Your access has expired', 'warning');
                             }
-                        );
+                        };
+                        return {
+                            send: function (headers, cb) {
+                                transport.cb = cb;
+                                transport.send(false);
+                            },
+                            abort: function () {
+                                transport.cb(400)
+                            }
+                        };
                     }
                 });
+
+                /*$( document ).ajaxError(function (model, jqXHR) {
+                    const now = moment().valueOf(),
+                        refresh_exp = me.get('refresh_exp'),
+                        leftRe = refresh_exp && (refresh_exp - now);
+
+                    if (!refresh_exp || leftRe < 0) {
+                        // Refresh token expired
+                        me.logoutAndExit();
+                    } else if (jqXHR.status === 401) {
+                        setTimeout(() => {
+                            if(me.checkRefStatus || refresh_exp !== me.get('refresh_exp')){
+
+                            }
+                        }, 200);
+                    }
+                });*/
 
                 var originalNavigate = Backbone.history.navigate;
                 Backbone.history.navigate = function (fragment, options) {
                     originalNavigate.apply(this, arguments);
                     me.chRef();
                 }
+            },
+            logoutAndExit: function() {
+                var me = this;
+                me.logout().then(
+                    function () {
+                        if (!window.BackboneApp) return window.open('login',"_self",false);
+                        const router = window.BackboneApp.getRouter();
+                        router.navigate('login', {
+                            trigger: true
+                        });
+                        AlertView.show('Warning', 'Your access has expired', 'warning');
+                    }
+                );
             },
             checkRefStatus: false,
             checkRefresh: function (jqXHR) {
@@ -164,6 +239,15 @@
                 })
             },
             parseResp: function (resp) {
+                if(typeof resp === 'string') {
+                    try {
+                        const json = JSON.parse(resp);
+                        resp = json;
+                    } catch(e){
+
+                    }
+                }
+                //console.log(2, resp);
                 var me = this;
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
