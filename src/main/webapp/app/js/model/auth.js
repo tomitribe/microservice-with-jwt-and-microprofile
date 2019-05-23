@@ -63,7 +63,7 @@
                         }
                         jqXHR.setRequestHeader('xdate', new Date().toISOString());
                         
-                        console.log(jqXHR, settings, this.headers, jqXHR.requestHeaders);
+                        //console.log(httpSignaturesJs, jwkJs);
 
                         if (typeof possessor_key !== 'undefined' && !!possessor_key) {
                             const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','xdate'], settings.method, settings.url, jqXHR.requestHeaders );
@@ -82,7 +82,7 @@
                 });
 
                 $( document ).ajaxSend(function( event, request, settings ) {
-                    console.log( event, request, settings );
+                    //console.log( event, request, settings );
                 });
 
                 $( document ).ajaxError(function (model, jqXHR) {
@@ -189,7 +189,7 @@
             },
             parseResp: function (resp) {
                 var me = this;
-                console.log(resp, jwkJs, httpSignaturesJs);
+                //console.log(resp, jwkJs, httpSignaturesJs);
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
                 var possessor_key = resp && resp['key'];
