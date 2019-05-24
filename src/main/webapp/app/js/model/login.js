@@ -35,6 +35,7 @@
                         beforeSend: function() {
                         },
                         global: false,
+                        ignoreTransport: true,
                         data: creds,
                         contentType: 'application/x-www-form-urlencoded'
                     })
@@ -52,6 +53,7 @@
                         beforeSend: function() {
                         },
                         global: false,
+                        ignoreTransport: true,
                         data: $.param({
                             refresh_token: token,
                             //type: 'oauth2',
