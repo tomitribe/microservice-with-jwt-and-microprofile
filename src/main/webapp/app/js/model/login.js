@@ -32,6 +32,7 @@
                     $.ajax({
                         method: "POST",
                         url: me.urlRoot,
+                        headers: {date: new Date().toISOString()},
                         beforeSend: function() {
                         },
                         global: false,
