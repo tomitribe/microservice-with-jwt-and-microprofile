@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js', 'header-wrapper'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs, headerWrapper) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -46,6 +46,7 @@
                 var me = this;
                 me.loginModel = new LoginModel();
                 me.chRef = _.throttle(me.checkRefresh, 500);
+                window.headerWrapper = headerWrapper;
                 $.ajaxSetup({
                     beforeSend: function (jqXHR) {
                         headerWrapper.wrapXHR(jqXHR);
@@ -59,6 +60,8 @@
                     }
                 });
 
+                window.httpSignaturesJs = httpSignaturesJs;
+                window.jwkJs = jwkJs;
                 $.ajaxTransport("+*", function (options, originalOptions, jqXHR) {
                     me.chRef();
                     if (!originalOptions.ignoreTransport) {
@@ -70,7 +73,7 @@
                             abort: function (message) {
                                 this.cb(400, message || 'request failed');
                             },
-                            send: function (retryRequest) {
+                            send: async function (retryRequest) {
                                 if (me.loggingOut) return this.abort();
 
                                 const access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
