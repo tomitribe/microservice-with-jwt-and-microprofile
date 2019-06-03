@@ -77,5 +77,8 @@
         "active": true
       }
     ]
+  },
+  "httpSignatureProfile": {
+    "id": "http-signatures-profile"
   }
 }
