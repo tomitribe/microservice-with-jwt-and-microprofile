@@ -50,7 +50,7 @@
                 $.ajaxSetup({
                     beforeSend: function (jqXHR) {
                         headerWrapper.wrapXHR(jqXHR);
-                        jqXHR.setRequestHeader('x-date', new Date().toGMTString());
+                        jqXHR.setRequestHeader('tt-date', new Date().toGMTString());
 
                         // Simplest way to inject Authorization header for jQuery
                         /*var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
@@ -61,7 +61,7 @@
                 });
 
                 window.httpSignaturesJs = httpSignaturesJs;
-                window.jwkJs = jwkJs;
+                window.jwkJs = jwkJs.jwkJs;
                 $.ajaxTransport("+*", function (options, originalOptions, jqXHR) {
                     me.chRef();
                     if (!originalOptions.ignoreTransport) {
@@ -77,22 +77,31 @@
                                 if (me.loggingOut) return this.abort();
 
                                 const access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
-                                    possessor_key = me.get('possessor_key'),
-                                    key_id = me.get('possessor_key_id');
+                                    possessor_key = me.get('possessor_key');
                                 if (typeof access_token !== 'undefined' && !!access_token) {
                                     if (typeof possessor_key !== 'undefined' && !!possessor_key) {
-                                        const signingString = new httpSignaturesJs.Signatures.createSigningString(['(request-target)','xdate'], settings.method, settings.url, jqXHR.requestHeaders );
-                                        const signature = await jwkJs.HMAC.sign('256')
-                                            .then(res => res.sign(signingString, possessor_key));
-                                        const signatureHeader = new httpSignaturesJs.Signature(
-                                            key_id||'',
-                                            "hmac-sha256",
-                                            signature,
-                                            jqXHR.requestHeaders
-                                        );
+                                        const keyObj = JSON.parse(window.jwkJs.bu2s(possessor_key));
+                                        const signingString = new window.httpSignaturesJs.Signatures.createSigningString(['tt-date'], originalOptions.method, originalOptions.url, jqXHR.requestHeaders );
+                                        const signature = await window.jwkJs
+                                            .tryPromise(() => window.jwkJs.HMAC.sign('256')(signingString, possessor_key))
+                                            .then(signature => signature)
+                                            .catch(console.error);
+                                        if (signature) {
+                                            console.log(signingString, possessor_key, signature);
+                                            const signatureHeader = new window.httpSignaturesJs.Signature(
+                                                keyObj.kid,
+                                                "hmac-sha256",
+                                                signature,
+                                                ['tt-date']
+                                            );
+                                            this.originalOptions.headers = {
+                                                ...this.originalOptions.headers,
+                                                Authorization: signatureHeader.toString()
+                                            };
+                                        }
                                         this.originalOptions.headers = {
                                             ...this.originalOptions.headers,
-                                            authorization: signatureHeader.toString()
+                                            Bearer: 'bearer ' + access_token
                                         };
                                     } else {
                                         // Another way to inject Authorization header

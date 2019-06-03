@@ -5,10 +5,12 @@
         if(!proto.wrappedSetRequestHeader) {
             proto.wrappedSetRequestHeader = proto.setRequestHeader;
             proto.setRequestHeader = function (header, value) {
+                //console.log('[debug] setRequestHeader("'+header+'", "'+value+'");');
                 this.wrappedSetRequestHeader(header, value);
                 if (!this.requestHeaders) {
                     this.requestHeaders = {};
-                } else if (!this.requestHeaders[header]) {
+                }
+                if (!this.requestHeaders[header]) {
                     this.requestHeaders[header] = [value];
                 }else {
                     this.requestHeaders[header].push(value);
