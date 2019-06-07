@@ -55,7 +55,7 @@
                     beforeSend: function (jqXHR) {
                         var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                         if (typeof access_token !== 'undefined' && !!access_token) {
-                            jqXHR.setRequestHeader('Authorization', token_type + access_token);
+                            jqXHR.setRequestHeader('Authorization', 'Bearer ' + access_token);
                         }
                         me.chRef(jqXHR);
                     }

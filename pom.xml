@@ -35,7 +35,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomee.version>8.0.0-M2</tomee.version>
+    <tomee.version>8.0.0-M3</tomee.version>
     <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
     <mp-jwt.version>1.0</mp-jwt.version>
     <mp-config.version>1.2</mp-config.version>
@@ -98,9 +98,9 @@
       <plugin>
         <groupId>com.tomitribe.tribestream.maven</groupId>
         <artifactId>tribestream-maven-plugin</artifactId>
-        <version>1.7</version>
+        <version>1.7.1</version>
         <configuration>
-          <version>1.7</version>
+          <version>1.8-SNAPSHOT</version>
         </configuration>
       </plugin>
     </plugins>
