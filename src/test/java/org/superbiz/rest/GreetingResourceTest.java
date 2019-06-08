@@ -22,8 +22,10 @@ import org.apache.openejb.junit.ApplicationComposer;
 import org.apache.openejb.testing.Classes;
 import org.apache.openejb.testing.EnableServices;
 import org.apache.openejb.testing.Module;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.superbiz.moviefun.LoadBalancerRegisterService;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -57,5 +59,22 @@ public class GreetingResourceTest {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post("Hi REST!", String.class);
         assertEquals("hi rest!", message);
+    }
+
+    @Test
+//    @Ignore("To be executed manually for the moment")
+    public void register() {
+        final LoadBalancerRegisterService service = new LoadBalancerRegisterService();
+        service.setHostUrl("http://localhost:8080");
+        service.setServerUrl("http://localhost:8182");
+        service.setConnectionId("movies-api-connection");
+        service.setRegisterEndpoint("/api/http/{connectionId}/hosts/register");
+
+        service.setSignaturesKeyId("my-key-id");
+        service.setSignaturesKey("YmQwYzE4MTg4ZjJjMWVkNWJhOTE3Yzc5MTRlYzI1ZjMxYTZiZDdlMDYxZWRjMDgx");
+        service.setSignaturesAlgorithm("hmac-sha256");
+        service.setSignaturesSignedHeaders("(request-target) date digest");
+
+        service.setup();
     }
 }
