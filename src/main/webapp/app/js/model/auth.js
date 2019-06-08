@@ -96,18 +96,18 @@
                                             );
                                             this.originalOptions.headers = {
                                                 ...this.originalOptions.headers,
-                                                Authorization: signatureHeader.toString()
+                                                Signature: signatureHeader.toString()
                                             };
                                         }
                                         this.originalOptions.headers = {
                                             ...this.originalOptions.headers,
-                                            Bearer: 'bearer ' + access_token
+                                            Authorization: 'Bearer ' + access_token
                                         };
                                     } else {
                                         // Another way to inject Authorization header
                                         this.originalOptions.headers = {
                                             ...this.originalOptions.headers,
-                                            authorization: token_type + access_token
+                                            Authorization: token_type + access_token
                                         };
                                     }
                                 }

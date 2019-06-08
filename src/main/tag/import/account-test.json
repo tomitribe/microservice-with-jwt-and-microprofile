@@ -5,19 +5,9 @@
   "displayName": "Tester one",
   "roles": [
     {
-      "displayName": "delete",
-      "name": "delete",
-      "id": "delete"
-    },
-    {
-      "displayName": "update",
-      "name": "update",
-      "id": "update"
-    },
-    {
-      "displayName": "create",
-      "name": "create",
-      "id": "create"
+      "displayName": "app-config",
+      "name": "app-config",
+      "id": "app-config"
     }
   ],
   "credentials": {
