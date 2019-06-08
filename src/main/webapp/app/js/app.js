@@ -79,7 +79,16 @@
                 data: data,
                 success: function (result) {
                     mainView.addRows(result.models);
-
+                },
+                complete: function () {
+                    var count = 0;
+                    function updCount(count){
+                        paginator.setCount(count);
+                        mainView.setPaginator(count);
+                        if (!!count && pageNumber > count) {
+                            router.showMain(count, fieldName, fieldValue);
+                        }
+                    }
                     $.ajax({
                         url: window.ux.ROOT_URL + 'rest/movies/count/',
                         method: 'GET',
@@ -89,14 +98,13 @@
                             searchTerm: appState.fieldValue
                         },
                         success: function (total) {
-                            var count = Math.ceil(total / max);
-                            paginator.setCount(count);
-                            mainView.setPaginator(count);
-                            if(!!count && pageNumber > count) {
-                                router.showMain(count, fieldName, fieldValue);
-                            }
+                            count = Math.ceil(total / max);
+                            updCount(count);
+                        },
+                        complete: function () {
+                            updCount(count);
                         }
-                    });
+                    })
                 }
             });
         }

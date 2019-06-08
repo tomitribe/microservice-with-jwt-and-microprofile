@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js', 'header-wrapper'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs, headerWrapper) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -41,95 +41,168 @@
                 refresh_exp: ''
             },
             loginModel: null,
-            ref: null,
             chRef: null,
             initialize: function () {
                 var me = this;
                 me.loginModel = new LoginModel();
-                me.ref = _.throttle(function () {
-                    if (!me.refreshActive) me.refreshRunner();
-                }, 1000);
                 me.chRef = _.throttle(me.checkRefresh, 500);
-
+                window.headerWrapper = headerWrapper;
                 $.ajaxSetup({
                     beforeSend: function (jqXHR) {
-                        var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                        headerWrapper.wrapXHR(jqXHR);
+                        jqXHR.setRequestHeader('tt-date', new Date().toGMTString());
+
+                        // Simplest way to inject Authorization header for jQuery
+                        /*var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                         if (typeof access_token !== 'undefined' && !!access_token) {
-                            jqXHR.setRequestHeader('Authorization', 'Bearer ' + access_token);
-                        }
-                        me.chRef(jqXHR);
+                            jqXHR.setRequestHeader('Authorization', token_type + access_token);
+                        }*/
                     }
                 });
 
-                $( document ).ajaxError(function (model, jqXHR) {
-                    if (jqXHR.status === 401) {
-                        me.logout().then(
-                            function () {
-                                if (!window.BackboneApp) return window.open('login',"_self",false);
-                                const router = window.BackboneApp.getRouter();
-                                router.navigate('login', {
-                                    trigger: true
+                window.httpSignaturesJs = httpSignaturesJs;
+                window.jwkJs = jwkJs.jwkJs;
+                $.ajaxTransport("+*", function (options, originalOptions, jqXHR) {
+                    me.chRef();
+                    if (!originalOptions.ignoreTransport) {
+                        const transport = {
+                            options,
+                            originalOptions,
+                            jqXHR,
+                            cb: null,
+                            abort: function (message) {
+                                this.cb(400, message || 'request failed');
+                            },
+                            send: async function (retryRequest) {
+                                if (me.loggingOut) return this.abort();
+
+                                const access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
+                                    possessor_key = me.get('possessor_key');
+                                if (typeof access_token !== 'undefined' && !!access_token) {
+                                    if (typeof possessor_key !== 'undefined' && !!possessor_key) {
+                                        const keyObj = JSON.parse(window.jwkJs.bu2s(possessor_key));
+                                        const signingString = new window.httpSignaturesJs.Signatures.createSigningString(['tt-date'], originalOptions.method, originalOptions.url, jqXHR.requestHeaders );
+                                        const signature = await window.jwkJs
+                                            .tryPromise(() => window.jwkJs.HMAC.sign('256')(signingString, possessor_key))
+                                            .then(signature => signature)
+                                            .catch(console.error);
+                                        if (signature) {
+                                            console.log(signingString, possessor_key, signature);
+                                            const signatureHeader = new window.httpSignaturesJs.Signature(
+                                                keyObj.kid,
+                                                "hmac-sha256",
+                                                signature,
+                                                ['tt-date']
+                                            );
+                                            this.originalOptions.headers = {
+                                                ...this.originalOptions.headers,
+                                                Authorization: signatureHeader.toString()
+                                            };
+                                        }
+                                        this.originalOptions.headers = {
+                                            ...this.originalOptions.headers,
+                                            Bearer: 'bearer ' + access_token
+                                        };
+                                    } else {
+                                        // Another way to inject Authorization header
+                                        this.originalOptions.headers = {
+                                            ...this.originalOptions.headers,
+                                            authorization: token_type + access_token
+                                        };
+                                    }
+                                }
+                                $.ajax({
+                                    ...this.originalOptions,
+                                    ignoreTransport: true,
+                                    retryRequest
+                                }).done((data, status, xhr) => {
+                                    this.cb(200, status, {text: xhr.responseText, JSON: xhr.responseJSON});
+                                }).fail(xhr => {
+                                    if (me.loggingOut) return this.abort();
+
+                                    const now = moment().valueOf(),
+                                        refresh_exp = me.get('refresh_exp'),
+                                        leftRe = (refresh_exp - now);
+                                    if (!refresh_exp || leftRe < 0) {
+                                        me.logoutAndWarn(xhr);
+                                    } else if (me.checkRefStatus) {
+                                        setTimeout(() => {
+                                            this.send(0);
+                                        }, 200);
+                                    } else if (xhr.status === 401 && retryRequest < 2) {
+                                        me.checkRefStatus = true;
+                                        me.refresh()
+                                            .then(() => this.send(retryRequest + 1))
+                                            .catch(e => me.logoutAndWarn(e))
+                                            .then(() => me.checkRefStatus = false);
+                                    } else {
+                                        this.abort();
+                                    }
                                 });
-                                AlertView.show('Warning', 'Your access has expired', 'warning');
                             }
-                        );
+                        };
+                        return {
+                            send: function (headers, cb) {
+                                transport.cb = cb;
+                                transport.send(0);
+                            },
+                            abort: function () {
+                                transport.abort();
+                            }
+                        };
                     }
                 });
 
                 var originalNavigate = Backbone.history.navigate;
                 Backbone.history.navigate = function (fragment, options) {
                     originalNavigate.apply(this, arguments);
-                    me.chRef();
-                }
+                };
+            },
+            loggingOut: false,
+            logoutAndWarn: function (e) {
+                var me = this;
+                if (me.loggingOut) return;
+
+                const message = e && e.responseJSON && e.responseJSON.error_description;
+                me.loggingOut = true;
+
+                me.logout().then(
+                    function () {
+                        if (!window.BackboneApp) return window.open('login', "_self", false);
+                        const router = window.BackboneApp.getRouter();
+                        router.navigate('login', {
+                            trigger: true
+                        });
+                        AlertView.show('Warning', message || 'Your access has expired', 'warning');
+                        setTimeout(() => me.loggingOut = false, 300);
+                    }
+                );
             },
             checkRefStatus: false,
-            checkRefresh: function (jqXHR) {
+            checkRefresh: function () {
                 var me = this;
                 if (!window.BackboneApp || me.checkRefStatus) return;
+
                 me.checkRefStatus = true;
-                me.getAuth().then(function () {
-                    //if(!me.checkLogout(jqXHR)) {
-                        me.ref();
-                    //}
-                })
-                    .catch(_.noop)
+                me.getAuth()
+                    .then(function () {
+                        const now = moment().valueOf(),
+                            access_exp = me.get('access_exp'),
+                            left = access_exp && (access_exp - now),
+                            refresh_exp = me.get('refresh_exp'),
+                            leftRe = (refresh_exp - now);
+                        if (!refresh_exp || leftRe < 0) {
+                            me.logoutAndWarn();
+                        } else if (!access_exp || left < 0) {
+                            return me.refresh()
+                                .then(_.noop);
+                        }
+                    })
+                    .catch(e => e && me.logoutAndWarn(e))
                     .then(function () {
                         me.checkRefStatus = false
                     });
             },
-            /*checkLogout: function(jqXHR) {
-                var me = this;
-                const now = moment().valueOf(),
-                    access_exp = me.get('access_exp'),
-                    refresh_exp = me.get('refresh_exp'),
-                    router = window.BackboneApp.getRouter(),
-                    left = (access_exp - now),
-                    leftRe = (refresh_exp - now);
-                if (!refresh_exp || leftRe < 0) {
-                    me.logout().then(
-                        function () {
-                            router.navigate('login', {
-                                trigger: true
-                            });
-                            AlertView.show('Warning', 'Access expired by refresh timeout, logged out.', 'warning');
-                        }
-                    );
-                    jqXHR && jqXHR.abort();
-                    return true;
-                } else if (!access_exp || left < 0) {
-                    me.logout().then(
-                        function () {
-                            router.navigate('login', {
-                                trigger: true
-                            });
-                            AlertView.show('Warning', 'Access expired by inactivity timeout, logged out.', 'warning');
-                        }
-                    );
-                    jqXHR && jqXHR.abort();
-                    return true;
-                }
-                return false;
-            },*/
             login: function (creds) {
                 var me = this;
                 return new Promise(function (res, rej) {
@@ -158,15 +231,26 @@
                     me.loginModel.getRefresh(rt)
                         .then(function (resp) {
                             me.parseResp(resp);
+                            me.save();
                             me.getAuth().then(res).catch(rej);
                         })
                         .catch(rej);
                 })
             },
             parseResp: function (resp) {
+                if (typeof resp === 'string') {
+                    try {
+                        const json = JSON.parse(resp);
+                        resp = json;
+                    } catch (e) {
+
+                    }
+                }
                 var me = this;
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
+                var possessor_key = resp && resp['key'];
+                var possessor_key_id = possessor_key && JSON.parse(atob(possessor_key)).kid;
                 if (resp && resp['access_token'] && access_token) {
                     const access_exp = moment.unix(access_token.exp).valueOf(),
                         refresh_exp = moment.unix(refresh_token.exp).valueOf();
@@ -178,6 +262,8 @@
                         jug: access_token['jug'],
 
                         access_token: resp['access_token'],
+                        possessor_key: possessor_key,
+                        possessor_key_id: possessor_key_id,
                         access_exp: access_exp,
 
                         token_type: resp['token_type'],
@@ -186,7 +272,6 @@
                         refresh_token: resp['refresh_token'],
                         refresh_exp: refresh_exp
                     });
-                    //me.chRef();
                 } else {
                     me.set({
                         auth: false,
@@ -196,6 +281,8 @@
                         jug: '',
 
                         access_token: '',
+                        possessor_key: '',
+                        possessor_key_id: '',
                         access_exp: '',
 
                         token_type: '',
@@ -205,43 +292,6 @@
                         refresh_exp: ''
                     });
                 }
-            },
-            refreshActive: false,
-            refreshTimeout: null,
-            clearRunner: function () {
-                var me = this;
-                clearTimeout(me.refreshTimeout);
-                me.refreshActive = false;
-            },
-            refreshRunner: function (timeout) {
-                var me = this;
-                if (me.refreshActive) return;
-                me.clearRunner();
-                me.getAuth().then(function () {
-                    me.refreshActive = true;
-                    me.refreshTimeout = setTimeout(function () {
-                        const now = moment().valueOf(),
-                            access_exp = me.get('access_exp'),
-                            left = (access_exp - now),
-                            min = 60 * 1000;
-                        if (left > 17 * min) {
-                            // Uncomment if refresh is needed during an inactivity too
-                            //me.refreshRunner(10 * min);
-                            me.refreshActive = false;
-                        } else if (left > min) {
-                            me.refreshRunner(left - min);
-                            me.refreshActive = false;
-                        } else {
-                            me.refresh()
-                                .then(_.noop)
-                                .catch(_.noop)
-                                // finally
-                                .then(function () {
-                                    me.refreshActive = false;
-                                })
-                        }
-                    }, timeout);
-                });
             },
             getAuth: function () {
                 var me = this;

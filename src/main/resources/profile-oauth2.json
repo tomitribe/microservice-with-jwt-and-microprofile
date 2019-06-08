@@ -1,4 +1,3 @@
-//api/profile/oauth2
 {
   "prefix": "Bearer",
   "header": "Authorization",
@@ -12,9 +11,6 @@
     "client_credentials",
     "refresh_token"
   ],
-  "httpSignatureProfile": {
-    "id": "http-signatures-profile"
-  },
   "claims": [
     {
       "claimSourceType": "ACCOUNT",

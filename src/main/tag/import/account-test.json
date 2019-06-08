@@ -1,0 +1,30 @@
+//api/account/
+{
+  "username": "testtest",
+  "email": "test@example.com",
+  "displayName": "Tester one",
+  "roles": [
+    {
+      "displayName": "delete",
+      "name": "delete",
+      "id": "delete"
+    },
+    {
+      "displayName": "update",
+      "name": "update",
+      "id": "update"
+    },
+    {
+      "displayName": "create",
+      "name": "create",
+      "id": "create"
+    }
+  ],
+  "credentials": {
+    "clientSecret": {
+      "oAuth2ProfileRef": "movies",
+      "active": true,
+      "value": "testtest"
+    }
+  }
+}

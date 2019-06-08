@@ -17,14 +17,18 @@
  */
 
 require.config(APP_CONFIG);
-
-requirejs(['app/js/app'], function (app) {
-    'use strict';
-
-    $(window.document).ready(function () {
-        // all the action is in app
-        window.BackboneApp = app.start();
-        window.ux.auth = app.auth;
+requirejs(['header-wrapper'], function (headerWrapper) {
+    const res = headerWrapper.wrapXHR(XMLHttpRequest || window.XMLHttpRequest);
+    if(res.headerWrapped) {
+        window.XMLHttpRequest = res.xhr;
+    }
+    requirejs(['app/js/app'], function (app) {
+        'use strict';
+        $(window.document).ready(function () {
+            // all the action is in app
+            window.BackboneApp = app.start();
+            window.ux.auth = app.auth;
+        });
     });
 });
 
