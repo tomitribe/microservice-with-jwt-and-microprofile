@@ -1,0 +1,14 @@
+{
+  "name": "movies",
+  "modRewrite": "RewriteCond %{REQUEST_METHOD} POST [OR]\nRewriteCond %{REQUEST_METHOD} PUT [OR]\nRewriteCond %{REQUEST_METHOD} DELETE\nRewriteRule \"^/moviefun(.*)$\" \"http://localhost:8181/moviefun$1\" [P,auth]\n\nRewriteRule \"^/moviefun(.*)$\" \"http://localhost:8181/moviefun$1\" [P]",
+  "profileRequiresAll": true,
+  "profiles": [
+    {
+      "id": "movies",
+      "name": "movies",
+      "displayName": "movies"
+    }
+  ],
+  "index": 5,
+  "roleRequiresAll": true
+}

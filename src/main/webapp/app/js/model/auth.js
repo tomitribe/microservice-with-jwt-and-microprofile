@@ -19,8 +19,8 @@
 (function () {
     'use strict';
 
-    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage'];
-    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView) {
+    var deps = ['lib/underscore', 'backbone', 'jwt_decode', 'app/js/model/login', 'lib/moment', 'app/js/tools/alert.view', 'lib/backbone-localstorage', 'jwk-js', 'http-signatures-js', 'header-wrapper'];
+    define(deps, function (_, Backbone, jwtDecode, LoginModel, moment, AlertView, bbLocalstorage, jwkJs, httpSignaturesJs, headerWrapper) {
         var AuthModel = Backbone.Model.extend({
             id: 'ux.auth',
             localStorage: new Store('ux.auth'),
@@ -46,16 +46,22 @@
                 var me = this;
                 me.loginModel = new LoginModel();
                 me.chRef = _.throttle(me.checkRefresh, 500);
-                // Simplest way to inject Authorization header for jQuery
-                /*$.ajaxSetup({
+                window.headerWrapper = headerWrapper;
+                $.ajaxSetup({
                     beforeSend: function (jqXHR) {
-                        var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                        headerWrapper.wrapXHR(jqXHR);
+                        jqXHR.setRequestHeader('tt-date', new Date().toGMTString());
+
+                        // Simplest way to inject Authorization header for jQuery
+                        /*var access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
                         if (typeof access_token !== 'undefined' && !!access_token) {
                             jqXHR.setRequestHeader('Authorization', token_type + access_token);
-                        }
+                        }*/
                     }
-                });*/
+                });
 
+                window.httpSignaturesJs = httpSignaturesJs;
+                window.jwkJs = jwkJs.jwkJs;
                 $.ajaxTransport("+*", function (options, originalOptions, jqXHR) {
                     me.chRef();
                     if (!originalOptions.ignoreTransport) {
@@ -67,16 +73,43 @@
                             abort: function (message) {
                                 this.cb(400, message || 'request failed');
                             },
-                            send: function (retryRequest) {
+                            send: async function (retryRequest) {
                                 if (me.loggingOut) return this.abort();
 
-                                // Another way to inject Authorization header
-                                const access_token = me.get('access_token'), token_type = me.get('token_type') + " ";
+                                const access_token = me.get('access_token'), token_type = me.get('token_type') + " ",
+                                    possessor_key = me.get('possessor_key');
                                 if (typeof access_token !== 'undefined' && !!access_token) {
-                                    this.originalOptions.headers = {
-                                        ...this.originalOptions.headers,
-                                        authorization: token_type + access_token
-                                    };
+                                    if (typeof possessor_key !== 'undefined' && !!possessor_key) {
+                                        const keyObj = JSON.parse(window.jwkJs.bu2s(possessor_key));
+                                        const signingString = new window.httpSignaturesJs.Signatures.createSigningString(['tt-date'], originalOptions.method, originalOptions.url, jqXHR.requestHeaders );
+                                        const signature = await window.jwkJs
+                                            .tryPromise(() => window.jwkJs.HMAC.sign('256')(signingString, possessor_key))
+                                            .then(signature => signature)
+                                            .catch(console.error);
+                                        if (signature) {
+                                            console.log(signingString, possessor_key, signature);
+                                            const signatureHeader = new window.httpSignaturesJs.Signature(
+                                                keyObj.kid,
+                                                "hmac-sha256",
+                                                signature,
+                                                ['tt-date']
+                                            );
+                                            this.originalOptions.headers = {
+                                                ...this.originalOptions.headers,
+                                                Signature: signatureHeader.toString()
+                                            };
+                                        }
+                                        this.originalOptions.headers = {
+                                            ...this.originalOptions.headers,
+                                            Authorization: 'Bearer ' + access_token
+                                        };
+                                    } else {
+                                        // Another way to inject Authorization header
+                                        this.originalOptions.headers = {
+                                            ...this.originalOptions.headers,
+                                            Authorization: token_type + access_token
+                                        };
+                                    }
                                 }
                                 $.ajax({
                                     ...this.originalOptions,
@@ -216,6 +249,8 @@
                 var me = this;
                 var access_token = resp && resp['access_token'] && jwtDecode(resp['access_token']);
                 var refresh_token = resp && resp['refresh_token'] && jwtDecode(resp['refresh_token']);
+                var possessor_key = resp && resp['key'];
+                var possessor_key_id = possessor_key && JSON.parse(atob(possessor_key)).kid;
                 if (resp && resp['access_token'] && access_token) {
                     const access_exp = moment.unix(access_token.exp).valueOf(),
                         refresh_exp = moment.unix(refresh_token.exp).valueOf();
@@ -227,6 +262,8 @@
                         jug: access_token['jug'],
 
                         access_token: resp['access_token'],
+                        possessor_key: possessor_key,
+                        possessor_key_id: possessor_key_id,
                         access_exp: access_exp,
 
                         token_type: resp['token_type'],
@@ -244,6 +281,8 @@
                         jug: '',
 
                         access_token: '',
+                        possessor_key: '',
+                        possessor_key_id: '',
                         access_exp: '',
 
                         token_type: '',
