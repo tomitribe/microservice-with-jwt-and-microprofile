@@ -34,7 +34,7 @@ The following message indicates the application is up and running:
     08-Mar-2019 11:34:07.767 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server startup in 6786 ms
 
 
-You can login now using on a browser the following URL: http://localhost:8181/moviefun/
+You can login now using on a browser the following URL: http://localhost:8080/movies
 
 You can test any of the following accounts:
 - Account `alex` with password `password` with create, update and delete role.
